@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="urn:schemas-microsoft-com:mac:vml" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:dgm="http://schemas.openxmlformats.org/drawingml/2006/diagram" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:pvml="urn:schemas-microsoft-com:office:powerpoint" xmlns:com="http://schemas.openxmlformats.org/drawingml/2006/compatibility" xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main" xmlns:ahyp="http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="365" name="Shape 365"/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="366" name="Google Shape;366;p51"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph type="title"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="533400" y="284253"/>
+            <a:ext cx="7620000" cy="612900"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln>
+            <a:noFill/>
+          </a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="0">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="120046"/>
+              </a:buClr>
+              <a:buSzPts val="2000"/>
+              <a:buFont typeface="Plus Jakarta Sans Medium"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>The gap isn’t capability. It’s meaning</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="367" name="Google Shape;367;p51"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph idx="1" type="body"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="533400" y="1370000"/>
+            <a:ext cx="3760200" cy="3082500"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln>
+            <a:noFill/>
+          </a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="45700">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="000000"/>
+              </a:buClr>
+              <a:buSzPts val="1400"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>Bare RAG matches text, not meaning.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="0" lvl="1" marL="0" rtl="0" algn="l">
+              <a:lnSpc>
+                <a:spcPct val="118333"/>
+              </a:lnSpc>
+              <a:spcBef>
+                <a:spcPts val="500"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buSzPts val="1440"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>It finds a doc that says “inventory” but can’t tell ERP stock from WMS stock.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="-137160" lvl="2" marL="137160" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="300"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buSzPts val="1200"/>
+              <a:buChar char="•"/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>Vector similarity is not business semantics.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="-137160" lvl="3" marL="320040" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="200"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="4E5661"/>
+              </a:buClr>
+              <a:buSzPts val="1000"/>
+              <a:buChar char="–"/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>Right words, wrong meaning.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="000000"/>
+              </a:buClr>
+              <a:buSzPts val="1400"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:t/>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="368" name="Google Shape;368;p51"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph idx="1" type="body"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="4722600" y="1370000"/>
+            <a:ext cx="3842400" cy="3126300"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln>
+            <a:noFill/>
+          </a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="45700">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="000000"/>
+              </a:buClr>
+              <a:buSzPts val="1400"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>Bare agents get raw codes from tools.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="0" lvl="1" marL="0" rtl="0" algn="l">
+              <a:lnSpc>
+                <a:spcPct val="118333"/>
+              </a:lnSpc>
+              <a:spcBef>
+                <a:spcPts val="500"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buSzPts val="1440"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>defect_cd=7, ALLOY_CD: the model has no idea which defect or grade.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="-137160" lvl="2" marL="137160" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="300"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buSzPts val="1200"/>
+              <a:buChar char="•"/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>So it guesses to fill the gap.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="-137160" lvl="3" marL="320040" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="200"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="4E5661"/>
+              </a:buClr>
+              <a:buSzPts val="1000"/>
+              <a:buChar char="–"/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>The missing layer is the ontology.</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="000000"/>
+              </a:buClr>
+              <a:buSzPts val="1400"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:t/>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="369" name="Google Shape;369;p51"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph idx="4294967295" type="body"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="533400" y="734285"/>
+            <a:ext cx="5029200" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="45700">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100">
+                <a:solidFill>
+                  <a:schemeClr val="accent2"/>
+                </a:solidFill>
+                <a:latin typeface="Plus Jakarta Sans SemiBold"/>
+                <a:ea typeface="Plus Jakarta Sans SemiBold"/>
+                <a:cs typeface="Plus Jakarta Sans SemiBold"/>
+                <a:sym typeface="Plus Jakarta Sans SemiBold"/>
+              </a:rPr>
+              <a:t>Why generic AI hallucinates on your data</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+  <p:transition spd="slow">
+    <p:push/>
+  </p:transition>
+</p:sld>

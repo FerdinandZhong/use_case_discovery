@@ -1,0 +1,1588 @@
+<?xml version="1.0" encoding="UTF-8"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="urn:schemas-microsoft-com:mac:vml" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:dgm="http://schemas.openxmlformats.org/drawingml/2006/diagram" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:pvml="urn:schemas-microsoft-com:office:powerpoint" xmlns:com="http://schemas.openxmlformats.org/drawingml/2006/compatibility" xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main" xmlns:ahyp="http://schemas.microsoft.com/office/drawing/2018/hyperlinkcolor">
+  <p:cSld>
+    <p:spTree>
+      <p:nvGrpSpPr>
+        <p:cNvPr id="390" name="Shape 390"/>
+        <p:cNvGrpSpPr/>
+        <p:nvPr/>
+      </p:nvGrpSpPr>
+      <p:grpSpPr>
+        <a:xfrm>
+          <a:off x="0" y="0"/>
+          <a:ext cx="0" cy="0"/>
+          <a:chOff x="0" y="0"/>
+          <a:chExt cx="0" cy="0"/>
+        </a:xfrm>
+      </p:grpSpPr>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="391" name="Google Shape;391;p54"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph type="title"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="533400" y="284253"/>
+            <a:ext cx="7620000" cy="612900"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="0">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:srgbClr val="120046"/>
+              </a:buClr>
+              <a:buSzPts val="2000"/>
+              <a:buFont typeface="Plus Jakarta Sans Medium"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US"/>
+              <a:t>Proven agentic workflows on Cloudera</a:t>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:sp>
+        <p:nvSpPr>
+          <p:cNvPr id="392" name="Google Shape;392;p54"/>
+          <p:cNvSpPr txBox="1"/>
+          <p:nvPr>
+            <p:ph idx="4294967295" type="body"/>
+          </p:nvPr>
+        </p:nvSpPr>
+        <p:spPr>
+          <a:xfrm>
+            <a:off x="533400" y="734285"/>
+            <a:ext cx="5029200" cy="324000"/>
+          </a:xfrm>
+          <a:prstGeom prst="rect">
+            <a:avLst/>
+          </a:prstGeom>
+          <a:noFill/>
+          <a:ln>
+            <a:noFill/>
+          </a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr anchorCtr="0" anchor="t" bIns="45700" lIns="91425" spcFirstLastPara="1" rIns="91425" wrap="square" tIns="45700">
+            <a:noAutofit/>
+          </a:bodyPr>
+          <a:lstStyle/>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100">
+                <a:solidFill>
+                  <a:schemeClr val="accent2"/>
+                </a:solidFill>
+                <a:latin typeface="Plus Jakarta Sans SemiBold"/>
+                <a:ea typeface="Plus Jakarta Sans SemiBold"/>
+                <a:cs typeface="Plus Jakarta Sans SemiBold"/>
+                <a:sym typeface="Plus Jakarta Sans SemiBold"/>
+              </a:rPr>
+              <a:t>Agents that replace manual review, grounded in governed data</a:t>
+            </a:r>
+            <a:endParaRPr sz="1100">
+              <a:solidFill>
+                <a:schemeClr val="accent2"/>
+              </a:solidFill>
+              <a:latin typeface="Plus Jakarta Sans SemiBold"/>
+              <a:ea typeface="Plus Jakarta Sans SemiBold"/>
+              <a:cs typeface="Plus Jakarta Sans SemiBold"/>
+              <a:sym typeface="Plus Jakarta Sans SemiBold"/>
+            </a:endParaRPr>
+          </a:p>
+          <a:p>
+            <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+              <a:spcBef>
+                <a:spcPts val="0"/>
+              </a:spcBef>
+              <a:spcAft>
+                <a:spcPts val="0"/>
+              </a:spcAft>
+              <a:buClr>
+                <a:schemeClr val="accent2"/>
+              </a:buClr>
+              <a:buSzPts val="1100"/>
+              <a:buFont typeface="Plus Jakarta Sans"/>
+              <a:buNone/>
+            </a:pPr>
+            <a:r>
+              <a:t/>
+            </a:r>
+            <a:endParaRPr/>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+      <p:graphicFrame>
+        <p:nvGraphicFramePr>
+          <p:cNvPr id="393" name="Google Shape;393;p54"/>
+          <p:cNvGraphicFramePr/>
+          <p:nvPr/>
+        </p:nvGraphicFramePr>
+        <p:xfrm>
+          <a:off x="642100" y="1317750"/>
+          <a:ext cx="3000000" cy="3000000"/>
+        </p:xfrm>
+        <a:graphic>
+          <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">
+            <a:tbl>
+              <a:tblPr>
+                <a:noFill/>
+                <a:tableStyleId>{8100C1AB-7A85-49F7-BFF8-8039CCAB0F40}</a:tableStyleId>
+              </a:tblPr>
+              <a:tblGrid>
+                <a:gridCol w="2230475"/>
+              </a:tblGrid>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="0"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Banking support</a:t>
+                      </a:r>
+                      <a:endParaRPr>
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                    <a:p>
+                      <a:pPr indent="0" lvl="1" marL="0" rtl="0" algn="l">
+                        <a:lnSpc>
+                          <a:spcPct val="118333"/>
+                        </a:lnSpc>
+                        <a:spcBef>
+                          <a:spcPts val="500"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1200">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Chatbot with memory</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1000">
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Recalls:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> the customer across every session</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1000">
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Retrieves:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> live account data from the lakehouse</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1000">
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Reasons:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> over cross-session patterns to escalate</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Result:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> no more “I explained this last time”</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+            </a:tbl>
+          </a:graphicData>
+        </a:graphic>
+      </p:graphicFrame>
+      <p:graphicFrame>
+        <p:nvGraphicFramePr>
+          <p:cNvPr id="394" name="Google Shape;394;p54"/>
+          <p:cNvGraphicFramePr/>
+          <p:nvPr/>
+        </p:nvGraphicFramePr>
+        <p:xfrm>
+          <a:off x="3148075" y="1317750"/>
+          <a:ext cx="3000000" cy="3000000"/>
+        </p:xfrm>
+        <a:graphic>
+          <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">
+            <a:tbl>
+              <a:tblPr>
+                <a:noFill/>
+                <a:tableStyleId>{8100C1AB-7A85-49F7-BFF8-8039CCAB0F40}</a:tableStyleId>
+              </a:tblPr>
+              <a:tblGrid>
+                <a:gridCol w="2230475"/>
+              </a:tblGrid>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="0"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Trade fraud</a:t>
+                      </a:r>
+                      <a:endParaRPr>
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                    <a:p>
+                      <a:pPr indent="0" lvl="1" marL="0" rtl="0" algn="l">
+                        <a:lnSpc>
+                          <a:spcPct val="118333"/>
+                        </a:lnSpc>
+                        <a:spcBef>
+                          <a:spcPts val="500"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1200">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Six-agent pipeline</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1000">
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Screens:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> every declaration, not a sample</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Extracts:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> invoice fields via OCR</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Checks:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> prices, sanctions, collusion patterns</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Result:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> 30-90 min review → seconds</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+            </a:tbl>
+          </a:graphicData>
+        </a:graphic>
+      </p:graphicFrame>
+      <p:graphicFrame>
+        <p:nvGraphicFramePr>
+          <p:cNvPr id="395" name="Google Shape;395;p54"/>
+          <p:cNvGraphicFramePr/>
+          <p:nvPr/>
+        </p:nvGraphicFramePr>
+        <p:xfrm>
+          <a:off x="5654050" y="1317750"/>
+          <a:ext cx="3000000" cy="3000000"/>
+        </p:xfrm>
+        <a:graphic>
+          <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">
+            <a:tbl>
+              <a:tblPr>
+                <a:noFill/>
+                <a:tableStyleId>{8100C1AB-7A85-49F7-BFF8-8039CCAB0F40}</a:tableStyleId>
+              </a:tblPr>
+              <a:tblGrid>
+                <a:gridCol w="2230475"/>
+              </a:tblGrid>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="0"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Manufacturing</a:t>
+                      </a:r>
+                      <a:endParaRPr>
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                    <a:p>
+                      <a:pPr indent="0" lvl="1" marL="0" rtl="0" algn="l">
+                        <a:lnSpc>
+                          <a:spcPct val="118333"/>
+                        </a:lnSpc>
+                        <a:spcBef>
+                          <a:spcPts val="500"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="0"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1200">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Defect triage + guardrails</a:t>
+                      </a:r>
+                      <a:endParaRPr sz="1000">
+                        <a:latin typeface="Plus Jakarta Sans"/>
+                        <a:ea typeface="Plus Jakarta Sans"/>
+                        <a:cs typeface="Plus Jakarta Sans"/>
+                        <a:sym typeface="Plus Jakarta Sans"/>
+                      </a:endParaRPr>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Grounds:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> every claim in an SOP § or data row</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:schemeClr val="dk2"/>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Blocks:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> invented part numbers and action codes</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Abstains:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> when the evidence is insufficient</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+              <a:tr h="308875">
+                <a:tc>
+                  <a:txBody>
+                    <a:bodyPr/>
+                    <a:lstStyle/>
+                    <a:p>
+                      <a:pPr indent="0" lvl="0" marL="0" rtl="0" algn="l">
+                        <a:spcBef>
+                          <a:spcPts val="300"/>
+                        </a:spcBef>
+                        <a:spcAft>
+                          <a:spcPts val="1000"/>
+                        </a:spcAft>
+                        <a:buNone/>
+                      </a:pPr>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:solidFill>
+                            <a:schemeClr val="accent1"/>
+                          </a:solidFill>
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t>Result:</a:t>
+                      </a:r>
+                      <a:r>
+                        <a:rPr lang="en-US" sz="1000">
+                          <a:latin typeface="Plus Jakarta Sans"/>
+                          <a:ea typeface="Plus Jakarta Sans"/>
+                          <a:cs typeface="Plus Jakarta Sans"/>
+                          <a:sym typeface="Plus Jakarta Sans"/>
+                        </a:rPr>
+                        <a:t xml:space="preserve"> human checks ~100% → &lt;20%</a:t>
+                      </a:r>
+                      <a:endParaRPr/>
+                    </a:p>
+                  </a:txBody>
+                  <a:tcPr marT="91425" marB="91425" marR="0" marL="0">
+                    <a:lnL cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnL>
+                    <a:lnR cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnR>
+                    <a:lnT cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnT>
+                    <a:lnB cap="flat" cmpd="sng" w="9525">
+                      <a:solidFill>
+                        <a:srgbClr val="9E9E9E">
+                          <a:alpha val="0"/>
+                        </a:srgbClr>
+                      </a:solidFill>
+                      <a:prstDash val="solid"/>
+                      <a:round/>
+                      <a:headEnd len="sm" w="sm" type="none"/>
+                      <a:tailEnd len="sm" w="sm" type="none"/>
+                    </a:lnB>
+                  </a:tcPr>
+                </a:tc>
+              </a:tr>
+            </a:tbl>
+          </a:graphicData>
+        </a:graphic>
+      </p:graphicFrame>
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr>
+    <a:masterClrMapping/>
+  </p:clrMapOvr>
+</p:sld>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme2.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>
+  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps" Target="presProps.xml"/>
+  <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>
+  
+  <Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>
+  <Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster" Target="notesMasters/notesMaster1.xml"/>
+  <Relationship Id="rId7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>
+  
+  <Relationship Id="rId31" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansSemiBold-boldItalic.fntdata"/>
+  <Relationship Id="rId30" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansSemiBold-italic.fntdata"/>
+  <Relationship Id="rId33" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansMedium-bold.fntdata"/>
+  <Relationship Id="rId32" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansMedium-regular.fntdata"/>
+  <Relationship Id="rId35" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansMedium-boldItalic.fntdata"/>
+  <Relationship Id="rId34" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansMedium-italic.fntdata"/>
+  <Relationship Id="rId36" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/Ole-regular.fntdata"/>
+  
+  
+  
+  <Relationship Id="rId24" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSans-regular.fntdata"/>
+  
+  <Relationship Id="rId26" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSans-italic.fntdata"/>
+  <Relationship Id="rId25" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSans-bold.fntdata"/>
+  <Relationship Id="rId28" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansSemiBold-regular.fntdata"/>
+  <Relationship Id="rId27" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSans-boldItalic.fntdata"/>
+  <Relationship Id="rId29" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/font" Target="fonts/PlusJakartaSansSemiBold-bold.fntdata"/>
+  <Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide5.xml"/>
+  <Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide4.xml"/>
+  <Relationship Id="rId13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide7.xml"/>
+  <Relationship Id="rId12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide6.xml"/>
+  <Relationship Id="rId15" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide9.xml"/>
+  <Relationship Id="rId14" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide8.xml"/>
+  
+  
+  
+  
+  <Relationship Id="rId37" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide18.xml"/>
+  <Relationship Id="rId38" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide19.xml"/>
+</Relationships>

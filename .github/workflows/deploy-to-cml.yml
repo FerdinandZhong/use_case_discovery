@@ -1,0 +1,119 @@
+name: Deploy to Cloudera AI (CML) Workbench
+
+# Modeled on the sibling repos' pipelines (cai-eval-platform, ray-serve-cai).
+# Chain: setup project (from this git repo) -> create jobs -> trigger git_sync
+#        (CML auto-runs Build App; we wait for it) -> create/restart Application.
+#
+# Required repo secrets:
+#   CML_HOST            https://ml-xxxx.cloudera.site
+#   CML_API_KEY         CML API v2 key (User Settings -> API Keys)
+#   RUNTIME_IDENTIFIER  a Node 20+ ML Runtime identifier (stock runtimes are Python)
+#   ADMIN_TOKEN         admin secret for the app (Bearer / cookie auth)
+# Optional repo secrets:
+#   GH_PAT              PAT so CML can clone a private repo
+#   LLM_BASE_URL, LLM_API_KEY, LLM_MODEL   Stage-2 cockpit LLM (OpenAI-compatible)
+#   DATABASE_URL        Postgres; if set, used instead of SQLite
+
+on:
+  workflow_dispatch:
+    inputs:
+      subdomain:
+        description: 'Application subdomain (a-z0-9-)'
+        required: false
+        default: 'ucd-survey'
+        type: string
+  push:
+    branches: [main]
+
+jobs:
+  setup-project:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      project_id: ${{ steps.setup.outputs.project_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests pyyaml
+      - name: Setup CML project (from this git repo)
+        id: setup
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROJECT_NAME: "AI Use Case Discovery"
+        run: |
+          python cai_integration/setup_project.py
+          echo "project_id=$(cat /tmp/project_id.txt)" >> "$GITHUB_OUTPUT"
+
+  create-jobs:
+    needs: setup-project
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests pyyaml
+      - name: Create CML jobs (git_sync -> build)
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+          RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
+        run: python cai_integration/create_jobs.py --project-id ${{ needs.setup-project.outputs.project_id }}
+
+  trigger-build:
+    needs: [setup-project, create-jobs]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45   # git_sync (fast) + Build App (npm ci + next build)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests pyyaml
+      - name: Trigger git_sync; wait for Build App (CML auto-triggers it)
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+        run: python cai_integration/trigger_jobs.py --project-id ${{ needs.setup-project.outputs.project_id }}
+
+  launch-application:
+    needs: [setup-project, create-jobs, trigger-build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Create / restart the CML Application
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+          RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python cai_integration/deploy_application.py \
+            --host "$CML_HOST" --api-key "$CML_API_KEY" \
+            --project-id ${{ needs.setup-project.outputs.project_id }} \
+            --subdomain "${{ github.event.inputs.subdomain || 'ucd-survey' }}"
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## CML Deploy — ${{ job.status }}"
+            echo "- Project: \`${{ needs.setup-project.outputs.project_id }}\`"
+            echo "- App script: \`cai_integration/start-app.sh\` (next start on \$CDSW_APP_PORT)"
+            echo "- Auth: Workbench SSO (bypass_authentication=False)"
+          } >> "$GITHUB_STEP_SUMMARY"
