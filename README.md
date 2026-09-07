@@ -11,6 +11,20 @@ answers into per-customer **catalogs** (Markdown / JSON / CSV).
 - **Catalog collection** — one click exports Markdown (workshop use-case tables + AI Canvas prefill),
   JSON (raw), and CSV (cross-customer Value-vs-Feasibility scoring).
 
+## Screenshots — Stage 1 (survey + admin)
+
+**Admin dashboard** — create/delete customers, see response counts, download catalogs, open the cockpit.
+
+![Admin app](docs/images/admin_app_screenshot.png)
+
+**Full survey** (`/s/<slug>`) — the complete pre-discovery questionnaire; autosaves and resumes per browser.
+
+![Full survey page](docs/images/self_survey_page_screenshot.png)
+
+**Simplified deck-style survey** (`/d/<slug>`) — one punchy question-set per slide for a guided, sales-led walk-through.
+
+![Simplified deck-based survey](docs/images/simplified_deck_based_survey_screenshot.png)
+
 ## Stack
 Next.js 14 (App Router) · TypeScript · TailwindCSS · **swappable datastore** (embedded SQLite by
 default, Postgres optional). Ships as a **Docker image** and deploys either as a container or as a
@@ -100,6 +114,28 @@ deck's live workshop artifacts. Open it from `/admin` (the **Workshop** button p
   `docs/SESSION_GUIDE.md`.
 - **AI is optional:** with no LLM configured, the dashboard and all manual editing still work; only
   the agent buttons are disabled. The LLM key stays server-side.
+
+### The cockpit, phase by phase
+
+**Phase 1 · Dashboard** — align on the North Star (sponsor vision, value drivers, guardrails) and read the survey signal distributions before mining problems.
+
+![Workshop phase 1](docs/images/workshop_phase_1_screenshot.png)
+
+**Phase 2 · Use-case collection** — mine and detail each candidate use case (process steps, pattern, systems, human-in-the-loop); add live ones in the room.
+
+![Phase 2 use cases collection](docs/images/phase_2_use_cases_collection_screenshot.png)
+
+**Phase 3 · Prioritize** — position use cases on the draggable Value × Feasibility matrix from the agent scores.
+
+![Phase 3](docs/images/phase_3_screenshot.png)
+
+**Phase 4 · AI Canvas** — the editable 7-field canvas for the focus use case (prediction, judgment, action, outcome, training, input, feedback).
+
+![AI Canvas phase 4](docs/images/ai_canvas_phase_4_screenshot.png)
+
+**Phase 5 · Roadmap & RACI** — MVP backlog, reference architecture, RACI, and the closing **data ask** (what to send, owner, by when). **Export** downloads the Markdown leave-behind.
+
+![Final roadmap generation phase 5](docs/images/final_roadmap_generation_phase_5_screenshot.png)
 
 ## Routes
 | Route | Who | Purpose |
