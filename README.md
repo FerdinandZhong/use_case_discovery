@@ -70,9 +70,28 @@ listens on `PORT`/`CDSW_APP_PORT` (8080).
 
 ## Deploy — Option 2: Cloudera AI Workbench Application
 See **`cai_integration/README.md`**. In short: point a CML Application at
-`cai_integration/start-app.sh` with a Node 20+ runtime, set `ADMIN_TOKEN`, and keep unauthenticated
-access **off** (SSO). For a git-backed one-command bootstrap (create project → build Job → deploy),
+`cai_integration/start-app.sh` with a Node 20+ runtime, and keep unauthenticated access **off** (SSO).
+For a git-backed one-command bootstrap (create project → build Job → deploy),
 `cai_integration/{setup_project,create_jobs,trigger_jobs,deploy_application}.py` automate it via CML API v2.
+
+### Setting `ADMIN_TOKEN` on CML
+`ADMIN_TOKEN` is the admin/facilitator secret (read server-side as `process.env.ADMIN_TOKEN`); the app
+won't start without it. Set it one of three ways:
+
+**Default — GitHub Actions (CI/CD).** Store it once as a repo secret; every deploy injects it into the
+Application environment automatically (`.github/workflows/deploy-to-cml.yml` → `deploy_application.py`).
+The workflow **preflight** fails fast if it's missing.
+```bash
+gh secret set ADMIN_TOKEN --body "$(openssl rand -hex 24)"
+gh secret set CML_HOST; gh secret set CML_API_KEY; gh secret set RUNTIME_IDENTIFIER   # also required
+gh workflow run deploy-to-cml.yml -f subdomain=ucd-survey
+```
+
+Alternatives:
+- **CML UI** — Applications → New/Edit Application → **Environment Variables** → add `ADMIN_TOKEN`, save (restarts the app).
+- **Deploy script** — `python cai_integration/deploy_application.py --admin-token "$(openssl rand -hex 24)" …` (or export `ADMIN_TOKEN` and omit the flag).
+
+Rotating: a *restart* keeps the old env, so change the value in the UI (or re-run the CI/CD deploy with the new secret). Never put the token in a URL or commit it.
 
 ## Security
 - **Transport:** terminate TLS at your host/ingress (Vercel/CML/LB do this).

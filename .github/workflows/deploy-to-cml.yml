@@ -26,7 +26,34 @@ on:
     branches: [main]
 
 jobs:
+  # Fail fast (seconds, before any build) if required repo secrets are missing —
+  # GitHub Actions does not enforce secret presence on its own. ADMIN_TOKEN is set
+  # here, as a repo secret, so the CI/CD path is the default way to configure it.
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check required secrets are set
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+          RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+        run: |
+          missing=""
+          for v in CML_HOST CML_API_KEY RUNTIME_IDENTIFIER ADMIN_TOKEN; do
+            [ -z "${!v}" ] && missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing required repo secret(s):$missing"
+            echo "Set them under Settings → Secrets and variables → Actions, e.g.:" >> "$GITHUB_STEP_SUMMARY"
+            echo '  gh secret set ADMIN_TOKEN --body "$(openssl rand -hex 24)"' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "All required secrets present."
+
   setup-project:
+    needs: preflight
     runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:

@@ -56,6 +56,19 @@ warns if it doesn't look like a Node runtime.
 | `start-app.sh` | Application entry: `next start` on `$CDSW_APP_PORT`. |
 | `deploy_application.py` | Create (or restart) the Application via CML API v2. Run externally / from a Python session. |
 
+## Setting `ADMIN_TOKEN`
+The admin/facilitator secret (`process.env.ADMIN_TOKEN`); the app won't start without it.
+
+- **Default — GitHub Actions (CI/CD):** store it once as a repo secret and every deploy injects it into
+  the Application environment (`.github/workflows/deploy-to-cml.yml`; a preflight fails fast if it's absent).
+  ```bash
+  gh secret set ADMIN_TOKEN --body "$(openssl rand -hex 24)"
+  ```
+- **CML UI:** Applications → New/Edit → Environment Variables → `ADMIN_TOKEN`.
+- **Deploy script:** `deploy_application.py --admin-token …` (or export `ADMIN_TOKEN`).
+
+A restart preserves the old env — to rotate, change it in the UI or re-run the CI/CD deploy.
+
 ## Security first (customer data)
 - Keep **`bypass_authentication = False`** (the default). The app then sits behind
   Workbench SSO — only authenticated users reach it. `--public` flips it (not recommended).
