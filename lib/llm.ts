@@ -36,25 +36,36 @@ export async function chat(messages: ChatMessage[], opts: ChatOptions = {}): Pro
   if (!cfg.baseUrl || !cfg.apiKey || !cfg.model) throw new LlmNotConfiguredError();
 
   const base = cfg.baseUrl.replace(/\/$/, '');
-  const res = await fetch(`${base}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${cfg.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: cfg.model,
-      messages,
-      temperature: opts.temperature ?? 0.3,
-      max_tokens: opts.maxTokens ?? 1200,
-      stream: false,
-    }),
-    signal: opts.signal ?? AbortSignal.timeout(60_000),
-  });
+  const signal = opts.signal ?? AbortSignal.timeout(60_000);
+  // Token-limit param name differs across gateways: vLLM/CAII/OpenAI-legacy use
+  // `max_tokens`; newer OpenAI models (gpt-5, o-series) require `max_completion_tokens`.
+  const post = (tokenParam: 'max_tokens' | 'max_completion_tokens') =>
+    fetch(`${base}/chat/completions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${cfg.apiKey}` },
+      body: JSON.stringify({
+        model: cfg.model,
+        messages,
+        temperature: opts.temperature ?? 0.3,
+        [tokenParam]: opts.maxTokens ?? 1200,
+        stream: false,
+      }),
+      signal,
+    });
 
+  let res = await post('max_tokens');
   if (!res.ok) {
     const body = await res.text().catch(() => '');
-    throw new Error(`LLM request failed (${res.status}): ${body.slice(0, 500)}`);
+    // Self-heal the one common incompatibility: retry once with the newer param name.
+    if (res.status === 400 && /max_completion_tokens/i.test(body)) {
+      res = await post('max_completion_tokens');
+      if (!res.ok) {
+        const b2 = await res.text().catch(() => '');
+        throw new Error(`LLM request failed (${res.status}): ${b2.slice(0, 500)}`);
+      }
+    } else {
+      throw new Error(`LLM request failed (${res.status}): ${body.slice(0, 500)}`);
+    }
   }
   const data = await res.json();
   return data?.choices?.[0]?.message?.content ?? '';

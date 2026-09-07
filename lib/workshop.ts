@@ -68,6 +68,23 @@ export interface BacklogItem {
   nextSteps: string;
 }
 
+// Phase 05 "data ask" — the follow-up obligation that converts room energy into
+// a commitment ("send us X, owner Y, by date Z"). The #1 miss in no-survey sessions.
+export interface DataAsk {
+  ask: string; // what to send (logs / docs / exports / sample data)
+  owner: string; // who on the customer side owns sending it
+  due: string; // by when (free text — "2 weeks", "2026-09-30")
+}
+
+// Phase 01 "Strategy & Alignment" — the North Star, captured live on the Dashboard.
+// Anchors the whole session; fed into the agent context and the leave-behind export.
+export interface Strategy {
+  northStar?: string; // the sponsor's one-line vision / desired outcome
+  sponsor?: string; // who owns it (name / role)
+  valueDrivers?: string; // what value this unlocks (cost, velocity, revenue, risk…)
+  guardrails?: string; // risk tolerance, compliance, non-negotiables
+}
+
 // Facilitator-entered "session signals" — the desired solution patterns, systems, and
 // human-in-the-loop stance, captured live on the Dashboard when the survey didn't collect them.
 // These also guide the AI (fed into the canvas/architecture/kill context).
@@ -80,7 +97,8 @@ export interface SessionSignals {
 export interface WorkshopPack {
   useCases: WorkshopUseCase[];
   architecture: { forUseCaseId?: string; components: ArchitectureComponent[]; notes: string } | null;
-  roadmap: { backlog: BacklogItem[]; raci: RaciEntry[] } | null;
+  roadmap: { backlog: BacklogItem[]; raci: RaciEntry[]; dataAsk?: DataAsk } | null;
+  strategy?: Strategy;
   signals?: SessionSignals;
   generatedAt?: string;
 }

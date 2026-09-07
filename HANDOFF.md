@@ -1,6 +1,6 @@
 # Handoff — AI Use Case Discovery Tool
 
-_Last updated: 2026-08-03_
+_Last updated: 2026-09-06_
 
 ## 1. What this is
 A two-stage tool supporting the Cloudera **AI Use Case Discovery Workshop** (`docs/AI Discovery Workshop.pdf`):
@@ -70,6 +70,27 @@ populated). Slugs get a random suffix, so create fresh ones via `/admin` as need
   Systems / HITL) are **editable chip selectors** (`pack.signals`), seeded from survey data; facilitator
   edits persist and are **fed into the agent context** (generate + assists), preserved across regenerate.
 
+## 6c. Framework-alignment + deploy hardening (done — 2026-09)
+Diffed the app against the customer-facing reference deck (`Integrated AI Use case discovery -
+Customer Facing.pdf`, Vish Rajagopalan). App covers ~90%; closed the two real gaps + polish:
+- **(a) North Star capture (Phase 01).** New `strategy` on `WorkshopPack` (`Strategy`: northStar /
+  sponsor / valueDrivers / guardrails). Editable **Strategy & alignment** card at the top of the
+  Dashboard (`components/workshop/Dashboard.tsx`), persisted via the existing `persist()` patch,
+  folded into the agent context (`strategyToText` in `lib/aggregate.ts` → `generate/route.ts`),
+  preserved across regenerate, and written to the leave-behind export (`## Strategy & alignment`).
+- **(b) Data ask (Phase 05).** New `roadmap.dataAsk` (`DataAsk`: ask / owner / due). Editable
+  orange card on the Roadmap tab (`components/workshop/Roadmap.tsx`); carried across regenerate;
+  exported as `## Data ask`. The addendum's "#1 miss" is now recordable.
+- **(c) Tab logo.** `app/icon.svg` — navy + Cloudera-orange dot-grid mark (Next auto-serves it).
+- **(d) CML pipeline hardening.** `deploy_application.py` now polls the Application to `running`
+  (`--wait`/`--wait-timeout`/`--no-wait`, `--selfcheck`) and prints/writes the URL
+  (`/tmp/app_url.txt`); `create_jobs.py` **fails fast** if `RUNTIME_IDENTIFIER` is unset and warns
+  if it isn't a Node runtime; `deploy-to-cml.yml` surfaces the URL in the run Summary. So a green
+  CI run now means a genuinely reachable app.
+- **Self-checks:** `scripts/check-strategy.ts` (strategyToText) and `deploy_application.py --selfcheck`.
+- **Sample data:** `npx tsx scripts/seed-sample.ts` seeds `sample-northwind` (2 survey responses +
+  full workshop pack incl. North Star + Data ask) for demos/testing.
+
 ## 7. Docs & deck
 - `docs/SESSION_GUIDE.md` — room-first facilitation runbook (setup → 5-phase no-survey playbook → principles → contingencies).
 - `docs/WORKED_EXAMPLE.md` — full end-to-end example (survey → cockpit storyline) for Open-Source LLM Pull Automation.
@@ -83,8 +104,10 @@ populated). Slugs get a random suffix, so create fresh ones via `/admin` as need
 - **Real-LLM agent output unverified** — the agent *pipeline* is verified (graceful degradation, context
   wiring, defensive JSON parse), but not a live model's quality. Set an endpoint in `/admin/settings` → Test → Generate.
 - **Postgres path** written + build-clean but not runtime-tested (no local Postgres).
-- **CML Workbench deploy** scripted but not dry-run against a real Workbench (needs project + API key + Node runtime id).
-- **Full PPTX visual QA** needs LibreOffice (not installed); content QA + slide-1 render done, slides 2–7 by layout.
+- **CML Workbench deploy** scripted + **hardened** (health-poll, runtime preflight, URL in Summary;
+  see 6c-d) but still not dry-run against a real Workbench (needs project + API key + Node runtime id).
+- ~~**Full PPTX visual QA**~~ **done (2026-09)** — all 7 addendum slides rendered via LibreOffice and
+  inspected; no blockers/overlaps/cutoffs. (Addendum PPTX predates the North Star / Data-ask fields.)
 - **SQLite-on-CML-NFS** caveat: prefer Postgres for a high-traffic Workbench deployment.
 - **No automated test suite / not under git** — verification is scripted curl smoke tests; consider `git init`.
 

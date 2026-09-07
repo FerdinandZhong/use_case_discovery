@@ -107,7 +107,8 @@ jobs:
           python cai_integration/deploy_application.py \
             --host "$CML_HOST" --api-key "$CML_API_KEY" \
             --project-id ${{ needs.setup-project.outputs.project_id }} \
-            --subdomain "${{ github.event.inputs.subdomain || 'ucd-survey' }}"
+            --subdomain "${{ github.event.inputs.subdomain || 'ucd-survey' }}" \
+            --wait-timeout 300
       - name: Summary
         if: always()
         run: |
@@ -116,4 +117,5 @@ jobs:
             echo "- Project: \`${{ needs.setup-project.outputs.project_id }}\`"
             echo "- App script: \`cai_integration/start-app.sh\` (next start on \$CDSW_APP_PORT)"
             echo "- Auth: Workbench SSO (bypass_authentication=False)"
+            if [ -f /tmp/app_url.txt ]; then echo "- URL: $(cat /tmp/app_url.txt)"; fi
           } >> "$GITHUB_STEP_SUMMARY"

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
-import type { WorkshopPack, WorkshopUseCase } from '@/lib/workshop';
+import type { DataAsk, WorkshopPack, WorkshopUseCase } from '@/lib/workshop';
 
 interface Props {
   pack: WorkshopPack;
@@ -26,6 +26,14 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
     const next = structuredClone(pack);
     if (!next.roadmap) return;
     (next.roadmap.raci[i] as any)[key] = v;
+    onEdit(next);
+  }
+
+  const dataAsk = roadmap?.dataAsk;
+  function setDataAsk(key: keyof DataAsk, v: string) {
+    const next = structuredClone(pack);
+    if (!next.roadmap) return;
+    next.roadmap.dataAsk = { ask: '', owner: '', due: '', ...next.roadmap.dataAsk, [key]: v };
     onEdit(next);
   }
 
@@ -135,6 +143,43 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
           <p className="mt-3 text-sm text-cloudera-slate">Not generated yet.</p>
         )}
         <p className="mt-3 text-xs text-cloudera-slate">Edit any cell — changes autosave.</p>
+      </div>
+
+      {/* Phase 05 · the data ask — the follow-up obligation. The #1 miss in no-survey sessions. */}
+      <div className="rounded-large border border-cloudera-orange bg-orange-50 p-5 shadow-card lg:col-span-2">
+        <h3 className="font-semibold text-cloudera-navy">Data ask — the follow-up obligation</h3>
+        <p className="mt-1 text-xs text-cloudera-slate">
+          Close with a concrete request: <i>“to build this, send us X — owner Y — by Z.”</i> This is what converts the room’s energy into a commitment.
+        </p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
+          <label className="block">
+            <span className="text-xs font-medium text-cloudera-slate">What to send</span>
+            <input
+              value={dataAsk?.ask ?? ''}
+              onChange={(e) => setDataAsk('ask', e.target.value)}
+              placeholder="e.g. 6 months of Jira tickets with resolution notes; SOPs from Confluence"
+              className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-cloudera-slate">Owner</span>
+            <input
+              value={dataAsk?.owner ?? ''}
+              onChange={(e) => setDataAsk('owner', e.target.value)}
+              placeholder="Name / role"
+              className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange sm:w-40"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-medium text-cloudera-slate">By when</span>
+            <input
+              value={dataAsk?.due ?? ''}
+              onChange={(e) => setDataAsk('due', e.target.value)}
+              placeholder="2 weeks"
+              className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange sm:w-36"
+            />
+          </label>
+        </div>
       </div>
     </div>
   );

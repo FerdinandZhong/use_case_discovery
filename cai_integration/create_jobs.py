@@ -66,11 +66,34 @@ class JobManager:
 
     def get_runtime_identifier(self) -> Optional[str]:
         runtime_id = os.environ.get("RUNTIME_IDENTIFIER")
-        if runtime_id:
-            print(f"Using runtime from environment: {runtime_id[:80]}...")
-            return runtime_id
-        print("WARNING: RUNTIME_IDENTIFIER not set — jobs need a Node 20+ ML Runtime to build/start the app")
-        return None
+        if not runtime_id:
+            # Jobs without a Node 20+ runtime are guaranteed to fail deep in the
+            # build with a confusing error — fail fast here instead.
+            print("ERROR: RUNTIME_IDENTIFIER is not set.")
+            print("   The git_sync/build jobs and the Application need a Node 20+ ML Runtime")
+            print("   (stock CML runtimes are Python). Register one and set RUNTIME_IDENTIFIER —")
+            print("   see cai_integration/README.md.")
+            return None
+        print(f"Using runtime from environment: {runtime_id[:80]}...")
+        if "node" not in runtime_id.lower():
+            print("WARNING: RUNTIME_IDENTIFIER does not contain 'node' — stock CML runtimes are")
+            print("   Python and will fail `npm ci`/`next start`. Verify this is a Node 20+ runtime.")
+        self._verify_runtime_exists(runtime_id)  # best-effort, non-fatal
+        return runtime_id
+
+    def _verify_runtime_exists(self, runtime_id: str) -> None:
+        """Best-effort check that the runtime is registered in this workspace.
+        Endpoint shape varies across CML versions, so this only warns."""
+        result = self.make_request(
+            "GET", "runtimes",
+            params={"search_filter": f'{{"image_identifier":"{runtime_id}"}}', "page_size": 5},
+        )
+        if result is None:
+            return  # couldn't query (older CML / permissions) — skip silently
+        runtimes = result.get("runtimes", []) if isinstance(result, dict) else []
+        if not runtimes:
+            print("WARNING: could not find that runtime via /api/v2/runtimes — if job creation")
+            print("   fails, double-check the identifier is registered in this workspace.")
 
     def list_jobs(self, project_id: str) -> Dict[str, str]:
         print("Listing existing jobs...")
@@ -130,7 +153,7 @@ class JobManager:
         print("\nCreating/Updating Jobs")
         print("-" * 70)
 
-        runtime_identifier = self.get_runtime_identifier()
+        runtime_identifier = self.runtime_identifier
         job_ids = {}
         self.failed_jobs = []
         existing_jobs = self.list_jobs(project_id)
@@ -165,6 +188,11 @@ class JobManager:
         jobs_config = self.load_jobs_config()
         if not jobs_config:
             print("Failed to load jobs configuration")
+            return False
+
+        # Preflight: a valid Node runtime is required — fail fast, not deep in the build.
+        self.runtime_identifier = self.get_runtime_identifier()
+        if not self.runtime_identifier:
             return False
 
         configured_count = len(jobs_config.get("jobs", {}))

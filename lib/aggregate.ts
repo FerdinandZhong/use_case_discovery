@@ -135,6 +135,22 @@ export function signalsToText(signals?: {
   return parts.length ? `Facilitator session signals — ${parts.join('; ')}.` : '';
 }
 
+/** Format the Phase-01 strategy (North Star) into a context line for the agents. */
+export function strategyToText(strategy?: {
+  northStar?: string;
+  sponsor?: string;
+  valueDrivers?: string;
+  guardrails?: string;
+}): string {
+  if (!strategy) return '';
+  const parts: string[] = [];
+  if (strategy.northStar?.trim()) parts.push(`North Star: ${strategy.northStar.trim()}`);
+  if (strategy.sponsor?.trim()) parts.push(`sponsor: ${strategy.sponsor.trim()}`);
+  if (strategy.valueDrivers?.trim()) parts.push(`value drivers: ${strategy.valueDrivers.trim()}`);
+  if (strategy.guardrails?.trim()) parts.push(`risk guardrails: ${strategy.guardrails.trim()}`);
+  return parts.length ? `Session strategy — ${parts.join('; ')}.` : '';
+}
+
 function labelList(path: string, values: unknown): string {
   const q = findQuestion(path);
   const arr = Array.isArray(values) ? values : values ? [values] : [];

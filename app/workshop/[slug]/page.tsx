@@ -316,6 +316,8 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
               agg={agg}
               signals={pack?.signals}
               onEditSignals={(s) => persist({ ...(pack ?? { useCases: [], architecture: null, roadmap: null }), signals: s })}
+              strategy={pack?.strategy}
+              onEditStrategy={(s) => persist({ ...(pack ?? { useCases: [], architecture: null, roadmap: null }), strategy: s })}
             />
           ) : (
             <Empty text="No survey data yet — head to Prioritize to capture use cases live." />
@@ -420,6 +422,15 @@ function NeedPack() {
 function downloadLeaveBehind(name: string, pack: WorkshopPack | null) {
   if (!pack) return;
   const L: string[] = [`# Workshop leave-behind — ${name}`, ''];
+  const st = pack.strategy;
+  if (st && (st.northStar || st.sponsor || st.valueDrivers || st.guardrails)) {
+    L.push('## Strategy & alignment');
+    if (st.northStar) L.push(`- **North Star:** ${st.northStar}`);
+    if (st.sponsor) L.push(`- **Sponsor:** ${st.sponsor}`);
+    if (st.valueDrivers) L.push(`- **Value drivers:** ${st.valueDrivers}`);
+    if (st.guardrails) L.push(`- **Risk guardrails:** ${st.guardrails}`);
+    L.push('');
+  }
   const ranked = [...pack.useCases].sort(
     (a, b) => b.matrix.value + b.matrix.feasibility - (a.matrix.value + a.matrix.feasibility),
   );
@@ -442,6 +453,10 @@ function downloadLeaveBehind(name: string, pack: WorkshopPack | null) {
     pack.roadmap.backlog.forEach((b, i) => L.push(`${i + 1}. ${b.mvp} — _next:_ ${b.nextSteps}`));
     L.push('', '## RACI', '| Task | R | A | C | I |', '| --- | --- | --- | --- | --- |');
     pack.roadmap.raci.forEach((r) => L.push(`| ${r.task} | ${r.responsible} | ${r.accountable} | ${r.consulted} | ${r.informed} |`));
+    const da = pack.roadmap.dataAsk;
+    if (da && (da.ask || da.owner || da.due)) {
+      L.push('', '## Data ask', `**To build this, send us:** ${da.ask || '—'}`, `- Owner: ${da.owner || '—'}`, `- By: ${da.due || '—'}`);
+    }
   }
   const blob = new Blob([L.join('\n')], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);

@@ -22,3 +22,11 @@
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent / tool state (not part of the app)
+.omc/
+.claude/
+
+# python bytecode (cai_integration)
+__pycache__/
+*.pyc

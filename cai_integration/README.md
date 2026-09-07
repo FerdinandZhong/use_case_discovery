@@ -39,6 +39,11 @@ python cai_integration/deploy_application.py \
 Re-running `deploy_application.py` **restarts** the existing Application (idempotent),
 so it also picks up a fresh build. Add `--database-url "postgresql://…"` for Postgres.
 
+`deploy_application.py` **waits for the Application to reach `running`** (poll, `--wait-timeout`,
+`--no-wait` to skip) and prints the URL (also written to `/tmp/app_url.txt` for CI), so a green
+run means a reachable app. `create_jobs.py` **fails fast** if `RUNTIME_IDENTIFIER` is unset and
+warns if it doesn't look like a Node runtime.
+
 ### What each file does
 | File | Role |
 |---|---|

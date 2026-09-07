@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSurvey, getWorkshop, listResponses, saveWorkshop } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
-import { extractCandidates, signalsToText } from '@/lib/aggregate';
+import { extractCandidates, signalsToText, strategyToText } from '@/lib/aggregate';
 import { llmConfigured } from '@/lib/llm';
 import { prioritize } from '@/lib/agents/prioritize';
 import { draftCanvas } from '@/lib/agents/canvas';
@@ -39,10 +39,15 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
     return NextResponse.json({ error: 'No submitted responses with use cases to analyze yet.' }, { status: 422 });
   }
 
-  // Fold any facilitator-entered session signals into every candidate's context (guides the agents).
+  // Fold facilitator-entered strategy (North Star) + session signals into every
+  // candidate's context so scoring/canvas/kill are anchored to the room's goal.
   const existing = await getWorkshop(params.slug);
+  const strat = strategyToText((existing?.data as any)?.strategy);
   const sig = signalsToText((existing?.data as any)?.signals);
-  if (sig) candidates.forEach((c) => (c.context += `\n${sig}`));
+  candidates.forEach((c) => {
+    if (strat) c.context += `\n${strat}`;
+    if (sig) c.context += `\n${sig}`;
+  });
 
   try {
     // 1) Score all candidates in one call (fatal errors fall back to neutral scores).
@@ -93,10 +98,14 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
       useCases.map((u) => ({ id: u.id, name: u.name, value: u.matrix.value, feasibility: u.matrix.feasibility })),
     ).catch(() => null);
 
+    // Carry the facilitator's data ask forward onto the freshly-synthesized roadmap.
+    const priorDataAsk = (existing?.data as any)?.roadmap?.dataAsk;
+
     const pack: WorkshopPack = {
       useCases,
       architecture: arch ? { forUseCaseId: top?.id, components: arch.components, notes: arch.notes } : null,
-      roadmap,
+      roadmap: roadmap ? { ...roadmap, dataAsk: priorDataAsk } : null,
+      strategy: (existing?.data as any)?.strategy, // preserve Phase-01 North Star across regenerate
       signals: (existing?.data as any)?.signals, // preserve facilitator session signals across regenerate
       generatedAt: new Date().toISOString(),
     };

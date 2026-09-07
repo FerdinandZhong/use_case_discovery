@@ -19,8 +19,21 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import time
 
 import requests
+
+
+# Application status classification (pure — unit-testable without network).
+# CML application statuses vary a little by version; classify on substrings.
+def app_is_running(status: str) -> bool:
+    return (status or "").lower() in ("running", "running_partial")
+
+
+def app_is_failed(status: str) -> bool:
+    return (status or "").lower() in (
+        "failed", "stopped", "error", "engine_failed", "startup_failed", "killed",
+    )
 
 
 def create_application(
@@ -116,6 +129,64 @@ def restart_application(host: str, api_key: str, project_id: str, app_id: str) -
     return resp.json() if resp.text else {"id": app_id}
 
 
+def get_application(host: str, api_key: str, project_id: str, app_id: str) -> dict:
+    """GET a single Application (for status + url)."""
+    url = f"{host}/api/v2/projects/{project_id}/applications/{app_id}"
+    resp = requests.get(url, headers={"Authorization": f"Bearer {api_key}"}, timeout=60)
+    if resp.status_code >= 400:
+        return {}
+    return resp.json() if resp.text else {}
+
+
+def wait_for_running(host: str, api_key: str, project_id: str, app_id: str,
+                     timeout: int = 300) -> bool:
+    """Poll the Application until it reaches a running state, or a terminal
+    failure / timeout. Mirrors trigger_jobs.wait_for_job_completion so a broken
+    start fails CI instead of reporting a false green."""
+    print(f"   Waiting for Application to reach 'running' (timeout: {timeout}s)...")
+    start = time.time()
+    last = None
+    while time.time() - start < timeout:
+        app = get_application(host, api_key, project_id, app_id)
+        status = (app.get("status") or "unknown").lower()
+        if status != last:
+            print(f"      [{int(time.time() - start)}s] status: {status}")
+            last = status
+        if app_is_running(status):
+            print("   ✓ Application is running")
+            return True
+        if app_is_failed(status):
+            print(f"   ✗ Application entered a failed state: {status}", file=sys.stderr)
+            return False
+        time.sleep(10)
+    print(f"   ✗ Timed out waiting for 'running' ({timeout}s)", file=sys.stderr)
+    return False
+
+
+def emit_url(host: str, api_key: str, project_id: str, app_id: str, subdomain: str) -> None:
+    """Print the deployed app URL and write it to /tmp/app_url.txt (for CI summary)."""
+    app = get_application(host, api_key, project_id, app_id)
+    url = app.get("url") or f"(subdomain '{subdomain}' — check the CML Applications page for the full URL)"
+    print(f"   url:       {url}")
+    try:
+        with open("/tmp/app_url.txt", "w") as f:
+            f.write(url)
+    except OSError:
+        pass
+
+
+def _selfcheck() -> None:
+    """No-network assertions for the pure helpers."""
+    assert app_is_running("running") and app_is_running("RUNNING")
+    assert not app_is_running("starting") and not app_is_running("stopped")
+    assert app_is_failed("failed") and app_is_failed("stopped") and app_is_failed("startup_failed")
+    assert not app_is_failed("running") and not app_is_failed("starting")
+    assert normalize_host("https://x.site/api/v2") == "https://x.site"
+    assert normalize_host("https://x.site/api/v1/") == "https://x.site"
+    assert normalize_host("https://x.site/") == "https://x.site"
+    print("deploy_application selfcheck: OK")
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description="Deploy the survey app as a CML Application")
     p.add_argument("--host", default=os.environ.get("CDSW_API_URL") or os.environ.get("CML_HOST"),
@@ -140,7 +211,19 @@ def main() -> None:
     p.add_argument("--base-path", default=os.environ.get("NEXT_PUBLIC_BASE_PATH"))
     p.add_argument("--public", action="store_true",
                    help="Set bypass_authentication=True (NOT recommended for customer data)")
+    p.add_argument("--wait", dest="wait", action="store_true", default=True,
+                   help="Poll until the Application is running (default)")
+    p.add_argument("--no-wait", dest="wait", action="store_false",
+                   help="Return immediately after create/restart (don't poll status)")
+    p.add_argument("--wait-timeout", type=int, default=300,
+                   help="Seconds to wait for 'running' before failing (default 300)")
+    p.add_argument("--selfcheck", action="store_true",
+                   help="Run no-network assertions on the pure helpers and exit")
     args = p.parse_args()
+
+    if args.selfcheck:
+        _selfcheck()
+        return
 
     missing = [k for k in ("host", "api_key", "project_id", "admin_token", "runtime_identifier")
                if not getattr(args, k)]
@@ -156,24 +239,32 @@ def main() -> None:
     existing = find_application(host, args.api_key, args.project_id, args.name, args.subdomain)
     if existing:
         app = restart_application(host, args.api_key, args.project_id, existing)
-        print(f"✓ Application restarted: {app.get('id', existing)}")
-        return
+        app_id = app.get("id", existing)
+        print(f"✓ Application restarted: {app_id}")
+    else:
+        app = create_application(
+            host, args.api_key, args.project_id,
+            name=args.name, subdomain=args.subdomain, script=args.script,
+            runtime_identifier=args.runtime_identifier, admin_token=args.admin_token,
+            cpu=args.cpu, memory=args.memory,
+            bypass_authentication=args.public,
+            database_url=args.database_url, sqlite_path=args.sqlite_path,
+            base_path=args.base_path,
+        )
+        app_id = app.get("id")
+        print("✓ Application created:")
+        print(f"   id:        {app_id}")
+        print(f"   subdomain: {app.get('subdomain')}")
+        if not args.public:
+            print("   auth:      Workbench SSO (bypass_authentication=False)")
 
-    app = create_application(
-        host, args.api_key, args.project_id,
-        name=args.name, subdomain=args.subdomain, script=args.script,
-        runtime_identifier=args.runtime_identifier, admin_token=args.admin_token,
-        cpu=args.cpu, memory=args.memory,
-        bypass_authentication=args.public,
-        database_url=args.database_url, sqlite_path=args.sqlite_path,
-        base_path=args.base_path,
-    )
-    print("✓ Application created:")
-    print(f"   id:        {app.get('id')}")
-    print(f"   subdomain: {app.get('subdomain')}")
-    print(f"   status:    {app.get('status')}")
-    if not args.public:
-        print("   auth:      Workbench SSO (bypass_authentication=False)")
+    # Fail loudly if the app doesn't actually come up (broken runtime, missing
+    # dep, port issue) — otherwise CI reports a false green.
+    if args.wait and app_id:
+        if not wait_for_running(host, args.api_key, args.project_id, app_id, args.wait_timeout):
+            sys.exit(1)
+    if app_id:
+        emit_url(host, args.api_key, args.project_id, app_id, args.subdomain)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import type { Aggregate, Bucket } from '@/lib/aggregate';
-import type { SessionSignals } from '@/lib/workshop';
+import type { SessionSignals, Strategy } from '@/lib/workshop';
 import { QUESTIONNAIRE, optionLabel, Question } from '@/lib/questionnaire';
 
 const NAVY = '#1a1a4e';
@@ -87,19 +87,67 @@ function SignalCard({
   );
 }
 
+/** Phase-01 North Star capture — free text, seeded empty; guides the AI + export. */
+function StrategyCard({ strategy, onChange }: { strategy?: Strategy; onChange: (s: Strategy) => void }) {
+  const s = strategy ?? {};
+  const set = (k: keyof Strategy, v: string) => onChange({ ...s, [k]: v });
+  const edited = !!(s.northStar || s.sponsor || s.valueDrivers || s.guardrails);
+  return (
+    <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
+      <div className="flex items-center justify-between">
+        <h3 className="font-semibold">Strategy &amp; alignment — the North Star</h3>
+        <span className="text-xs text-cloudera-slate">{edited ? 'edited' : 'set before mining problems'}</span>
+      </div>
+      <textarea
+        value={s.northStar ?? ''}
+        onChange={(e) => set('northStar', e.target.value)}
+        rows={2}
+        placeholder="North Star — the sponsor's one-line vision / desired outcome (e.g. “Cut model-pull lead time from 2 weeks to 1 day”)"
+        className="mt-3 w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
+      />
+      <div className="mt-3 grid gap-3 sm:grid-cols-3">
+        <Field label="Sponsor" value={s.sponsor} onChange={(v) => set('sponsor', v)} placeholder="Name / role" />
+        <Field label="Value drivers" value={s.valueDrivers} onChange={(v) => set('valueDrivers', v)} placeholder="Cost, velocity, revenue, risk…" />
+        <Field label="Risk guardrails" value={s.guardrails} onChange={(v) => set('guardrails', v)} placeholder="Compliance, accuracy bar, non-negotiables" />
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, placeholder }: { label: string; value?: string; onChange: (v: string) => void; placeholder?: string }) {
+  return (
+    <label className="block">
+      <span className="text-xs font-medium text-cloudera-slate">{label}</span>
+      <input
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="mt-1 w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
+      />
+    </label>
+  );
+}
+
 export default function Dashboard({
   agg,
   signals,
   onEditSignals,
+  strategy,
+  onEditStrategy,
 }: {
   agg: Aggregate;
   signals?: SessionSignals;
   onEditSignals: (s: SessionSignals) => void;
+  strategy?: Strategy;
+  onEditStrategy: (s: Strategy) => void;
 }) {
   const keysOf = (b: Bucket[]) => b.filter((x) => x.count > 0).map((x) => x.key);
   return (
     <div>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {/* Phase 01 · Strategy & Alignment — capture the North Star live (esp. no-survey rooms). */}
+      <StrategyCard strategy={strategy} onChange={onEditStrategy} />
+
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat label="Respondents" value={agg.respondentCount} />
         <Stat label="Candidate use cases" value={agg.useCaseCount} />
         <Stat label="Distinct value drivers" value={agg.valueDrivers.filter((b) => b.count).length} />
