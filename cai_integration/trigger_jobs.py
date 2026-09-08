@@ -185,39 +185,56 @@ class JobTrigger:
         return True
 
     def _await_child(self, project_id: str, job_name: str, timeout: int, trigger_epoch: float) -> bool:
-        """Wait for a child job to run: prefer the run CML auto-triggers; if none appears
-        within AUTO_TRIGGER_WINDOW, trigger it explicitly. Then wait for completion."""
+        """Run a child job and wait. Explicitly trigger it; if CML already auto-triggered
+        it (parent→child), the trigger 400s with 'already active' and we grab that active
+        run instead. Either way we get one run_id to wait on — no reliance on flaky
+        run-list detection of an auto-trigger."""
         job_id = self.find_job_id(project_id, job_name)
         if not job_id:
             print(f"✗ Job not found: {job_name} — run the create-jobs step first.")
             return False
-        run_id = self.wait_for_new_run(project_id, job_id, job_name, trigger_epoch, AUTO_TRIGGER_WINDOW)
-        if not run_id:
-            print(f"   {job_name} not auto-triggered within {AUTO_TRIGGER_WINDOW}s — triggering it explicitly.")
-            run_id = self.trigger_job(project_id, job_id)
+        run_id = self.trigger_job(project_id, job_id)
+        if run_id:
+            print(f"   Triggered {job_name}: run {run_id}")
+        else:
+            # 'already active' (or a transient trigger error): find the run CML is running.
+            run_id = self._await_active_run(project_id, job_id, job_name)
             if not run_id:
-                # Trigger can 400 with "already active" if CML auto-triggered it after all
-                # (detection just missed it) — grab the currently-active/latest run and wait.
-                run_id = self._latest_run(project_id, job_id)
-                if not run_id:
-                    print(f"   Failed to trigger {job_name} and no active run found")
-                    return False
-                print(f"   Using already-active run: {run_id}")
-            else:
-                print(f"   Run ID: {run_id}")
+                print(f"   Could not obtain a run for {job_name}")
+                return False
+            print(f"   Using CML-auto-triggered run: {run_id}")
         if not self.wait_for_job_completion(project_id, job_id, run_id, timeout):
             print(f"{job_name} failed")
             return False
         return True
 
-    def _latest_run(self, project_id: str, job_id: str) -> Optional[str]:
-        """Most-recent run id for a job (prefer an active one), by created_at."""
-        result = self.make_request("GET", f"projects/{project_id}/jobs/{job_id}/runs", params={"page_size": 10})
-        runs = (result or {}).get("runs", [])
-        for run in runs:  # prefer an actively-running run
-            if any(s in (run.get("status") or "").lower() for s in ("scheduling", "running", "starting", "pending")):
-                return run.get("id")
-        return max(runs, key=lambda r: r.get("created_at", ""), default={}).get("id")
+    def _list_runs(self, project_id: str, job_id: str) -> list:
+        """List a job's runs, robust to the response field name across CML versions."""
+        result = self.make_request(
+            "GET", f"projects/{project_id}/jobs/{job_id}/runs", params={"page_size": 20}
+        ) or {}
+        for key in ("runs", "job_runs", "jobRuns", "items", "data"):
+            v = result.get(key)
+            if isinstance(v, list):
+                return v
+        for v in result.values():  # fall back to the first list-of-objects in the payload
+            if isinstance(v, list) and (not v or isinstance(v[0], dict)):
+                return v
+        return []
+
+    def _await_active_run(self, project_id: str, job_id: str, job_name: str, tries: int = 6) -> Optional[str]:
+        """Return the id of the job's active (or most recent) run, retrying briefly for the
+        runs list to become consistent after an auto-trigger."""
+        for _ in range(tries):
+            runs = self._list_runs(project_id, job_id)
+            for run in runs:  # prefer an actively-running run
+                if any(s in (run.get("status") or "").lower()
+                       for s in ("scheduling", "running", "starting", "pending")):
+                    return run.get("id")
+            if runs:
+                return max(runs, key=lambda r: r.get("created_at", "")).get("id")
+            time.sleep(5)
+        return None
 
 
     def sync_only(self, project_id: str) -> bool:
