@@ -197,15 +197,36 @@ class JobTrigger:
         return True
 
 
+    def sync_only(self, project_id: str) -> bool:
+        """Run just git_sync to pull the latest code into the project working dir.
+        Used before create_jobs so newly-added job scripts (e.g. launch_app.py) exist
+        in the project when CML validates them. No-op on a brand-new project (no
+        git_sync job yet) — its clone is already at HEAD."""
+        job_id = self.find_job_id(project_id, ROOT_JOB_NAME)
+        if not job_id:
+            print(f"{ROOT_JOB_NAME} not found — new project (fresh clone); nothing to pre-sync.")
+            return True
+        print(f"Pre-syncing project code via {ROOT_JOB_NAME} ...")
+        run_id = self.trigger_job(project_id, job_id)
+        if not run_id:
+            print("   Failed to trigger git_sync")
+            return False
+        return self.wait_for_job_completion(project_id, job_id, run_id, ROOT_JOB_TIMEOUT)
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Trigger the git_sync root job; CML handles build + deploy"
+        description="Run the CML deploy chain (git_sync → build → launch)"
     )
     parser.add_argument("--project-id", required=True, help="CML project ID")
+    parser.add_argument("--sync-only", action="store_true",
+                        help="Only run git_sync (pull latest code), then exit — use before create_jobs")
     args = parser.parse_args()
 
     try:
         trigger = JobTrigger()
+        if args.sync_only:
+            sys.exit(0 if trigger.sync_only(args.project_id) else 1)
         sys.exit(0 if trigger.run(args.project_id) else 1)
     except KeyboardInterrupt:
         print("\nCancelled by user")

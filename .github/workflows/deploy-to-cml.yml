@@ -77,8 +77,26 @@ jobs:
           python cai_integration/setup_project.py
           echo "project_id=$(cat /tmp/project_id.txt)" >> "$GITHUB_OUTPUT"
 
-  create-jobs:
+  presync:
+    # Pull latest code into the project BEFORE create-jobs, so newly-added job scripts
+    # (e.g. launch_app.py) exist when CML validates them. No-op on a brand-new project.
     needs: setup-project
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - name: Pre-sync project git (git_sync)
+        env:
+          CML_HOST: ${{ secrets.CML_HOST }}
+          CML_API_KEY: ${{ secrets.CML_API_KEY }}
+        run: python cai_integration/trigger_jobs.py --project-id ${{ needs.setup-project.outputs.project_id }} --sync-only
+
+  create-jobs:
+    needs: [setup-project, presync]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
