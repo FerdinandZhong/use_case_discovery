@@ -8,7 +8,7 @@
 # every restart in seconds via `next start`, no rebuild):
 #   - local / CI:  python cai_integration/deploy_application.py --host ... --api-key ... \
 #                      --project-id ... --admin-token ... --runtime-identifier <node-runtime>
-#   - CML UI:      Applications → New Application → script: cai_integration/start-app.sh
+#   - CML UI:      Applications → New Application → script: cai_integration/start_app.py
 #
 # All jobs need a Node 20+ ML Runtime (npm + git on PATH). Pass it as the
 # RUNTIME_IDENTIFIER env var to create_jobs.py, or set runtime_identifier per job below.

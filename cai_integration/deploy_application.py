@@ -36,25 +36,8 @@ def app_is_failed(status: str) -> bool:
     )
 
 
-def create_application(
-    host: str,
-    api_key: str,
-    project_id: str,
-    *,
-    name: str,
-    subdomain: str,
-    script: str,
-    runtime_identifier: str,
-    admin_token: str,
-    cpu: int,
-    memory: int,
-    bypass_authentication: bool,
-    database_url: str | None,
-    sqlite_path: str,
-    base_path: str | None,
-) -> dict:
-    url = f"{host.rstrip('/')}/api/v2/projects/{project_id}/applications"
-
+def _build_payload(*, name, subdomain, script, runtime_identifier, admin_token,
+                   cpu, memory, bypass_authentication, database_url, sqlite_path, base_path) -> dict:
     environment = {
         "ADMIN_TOKEN": admin_token,
         "SQLITE_PATH": sqlite_path,
@@ -68,8 +51,7 @@ def create_application(
     for var in ("LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL"):
         if os.environ.get(var):
             environment[var] = os.environ[var]
-
-    payload = {
+    return {
         "name": name,
         "subdomain": subdomain,
         "script": script,
@@ -80,16 +62,33 @@ def create_application(
         "environment": environment,
     }
 
+
+def create_application(host: str, api_key: str, project_id: str, *, payload: dict) -> dict:
+    url = f"{host.rstrip('/')}/api/v2/projects/{project_id}/applications"
     resp = requests.post(
-        url,
-        json=payload,
+        url, json=payload,
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
         timeout=60,
     )
     if resp.status_code >= 400:
-        print(f"✗ Failed ({resp.status_code}): {resp.text}", file=sys.stderr)
+        print(f"✗ Create failed ({resp.status_code}): {resp.text}", file=sys.stderr)
         resp.raise_for_status()
     return resp.json()
+
+
+def update_application(host: str, api_key: str, project_id: str, app_id: str, *, payload: dict) -> dict:
+    """PATCH an existing Application so a redeploy picks up config changes (script,
+    env, runtime) — a bare restart keeps the old config."""
+    url = f"{host}/api/v2/projects/{project_id}/applications/{app_id}"
+    resp = requests.patch(
+        url, json=payload,
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        timeout=60,
+    )
+    if resp.status_code >= 400:
+        print(f"✗ Update failed ({resp.status_code}): {resp.text}", file=sys.stderr)
+        resp.raise_for_status()
+    return resp.json() if resp.text else {"id": app_id}
 
 
 def normalize_host(host: str) -> str:
@@ -197,7 +196,7 @@ def main() -> None:
                    help="Project ID (default: $CDSW_PROJECT_ID)")
     p.add_argument("--name", default="AI Use Case Discovery Survey")
     p.add_argument("--subdomain", default="ucd-survey", help="URL subdomain (a-z0-9-)")
-    p.add_argument("--script", default="cai_integration/start-app.sh")
+    p.add_argument("--script", default="cai_integration/start_app.py")
     p.add_argument("--runtime-identifier", default=os.environ.get("RUNTIME_IDENTIFIER"),
                    help="ML Runtime identifier — a Node 20+ runtime (default: $RUNTIME_IDENTIFIER; "
                         "see cai_integration/README.md)")
@@ -234,23 +233,24 @@ def main() -> None:
 
     host = normalize_host(args.host)
 
-    # Idempotent: restart an existing Application (picks up freshly-built code)
-    # rather than failing on a duplicate name/subdomain.
+    payload = _build_payload(
+        name=args.name, subdomain=args.subdomain, script=args.script,
+        runtime_identifier=args.runtime_identifier, admin_token=args.admin_token,
+        cpu=args.cpu, memory=args.memory, bypass_authentication=args.public,
+        database_url=args.database_url, sqlite_path=args.sqlite_path, base_path=args.base_path,
+    )
+
+    # Idempotent: if the Application exists, PATCH it to the current config (so a
+    # changed script/env/runtime takes effect — a bare restart would keep the old
+    # config) then restart. Otherwise create it.
     existing = find_application(host, args.api_key, args.project_id, args.name, args.subdomain)
     if existing:
+        update_application(host, args.api_key, args.project_id, existing, payload=payload)
         app = restart_application(host, args.api_key, args.project_id, existing)
         app_id = app.get("id", existing)
-        print(f"✓ Application restarted: {app_id}")
+        print(f"✓ Application updated + restarted: {app_id}")
     else:
-        app = create_application(
-            host, args.api_key, args.project_id,
-            name=args.name, subdomain=args.subdomain, script=args.script,
-            runtime_identifier=args.runtime_identifier, admin_token=args.admin_token,
-            cpu=args.cpu, memory=args.memory,
-            bypass_authentication=args.public,
-            database_url=args.database_url, sqlite_path=args.sqlite_path,
-            base_path=args.base_path,
-        )
+        app = create_application(host, args.api_key, args.project_id, payload=payload)
         app_id = app.get("id")
         print("✓ Application created:")
         print(f"   id:        {app_id}")

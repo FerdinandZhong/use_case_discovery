@@ -5,7 +5,7 @@ Runs the survey/cockpit app as a **CML Application**, using the same
 `cai-eval-platform`, …).
 
 **Flow:** create the project from git → CML Job chain (`git_sync → build`) pre-bakes
-`npm ci && npm run build` → launch the Application (`start-app.sh` runs `next start`
+`npm install && npm run build` → launch the Application (`start_app.py` → `start-app.sh` runs `next start`
 on `$CDSW_APP_PORT`, starting in seconds because the build already happened).
 
 ## Runtime: any ML Runtime (Node auto-installed if missing)
@@ -57,7 +57,8 @@ warns if it doesn't look like a Node runtime.
 | `trigger_jobs.py` | Trigger `git_sync`; CML auto-runs `build`. |
 | `git_sync.py` | Job: `git fetch && git reset --hard origin/<branch>`. |
 | `build_app.py` | Job: `npm ci && npm run build` (so the app never builds at start). |
-| `start-app.sh` | Application entry: `next start` on `$CDSW_APP_PORT`. |
+| `start_app.py` | Application entry (CML runs it in the **Python** engine); execs `start-app.sh` via bash. |
+| `start-app.sh` | Shell startup invoked by `start_app.py`: ensure Node, `next start` on `$CDSW_APP_PORT`. |
 | `deploy_application.py` | Create (or restart) the Application via CML API v2. Run externally / from a Python session. |
 
 ## Setting `ADMIN_TOKEN`
@@ -85,7 +86,7 @@ A restart preserves the old env — to rotate, change it in the UI or re-run the
 
 ## Option B — deploy via the CML UI (no scripts)
 Project → **Applications → New Application**:
-- **Script:** `cai_integration/start-app.sh`
+- **Script:** `cai_integration/start_app.py`  (Python entrypoint — CML runs the app script in the Python engine, not bash)
 - **Runtime:** your Node 20+ runtime
 - **Subdomain:** `ucd-survey` · **Resources:** 2 vCPU / 4 GB
 - **Environment:** `ADMIN_TOKEN=<secret>`, optionally `DATABASE_URL=<postgres>` /
