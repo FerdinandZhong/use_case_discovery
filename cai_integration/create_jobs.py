@@ -169,16 +169,30 @@ class JobManager:
         print("      Failed to update job")
         return False
 
+    def delete_job(self, project_id, job_id) -> bool:
+        result = self.make_request("DELETE", f"projects/{project_id}/jobs/{job_id}")
+        return result is not None
+
     def create_or_update_jobs(self, project_id, jobs_config) -> Dict[str, str]:
-        print("\nCreating/Updating Jobs")
+        print("\nCreating Jobs")
         print("-" * 70)
 
         runtime_identifier = self.runtime_identifier
         job_ids = {}
         self.failed_jobs = []
         existing_jobs = self.list_jobs(project_id)
+        keys = list(jobs_config.get("jobs", {}).items())
 
-        for job_key, job_config in jobs_config.get("jobs", {}).items():
+        # Delete any existing jobs we're about to (re)create, then create fresh. CML's job
+        # PATCH rejects the `environment` object (the launch job needs it), so delete+create
+        # is the reliable converge path. Delete children before parents to avoid FK issues.
+        for job_key, job_config in reversed(keys):
+            name = job_config["name"]
+            if name in existing_jobs:
+                print(f"   Deleting existing job to recreate: {name}")
+                self.delete_job(project_id, existing_jobs[name])
+
+        for job_key, job_config in keys:
             # The Launch Application job creates the CML Application, so it needs the app
             # config in its own environment (baked from the create-time env). This is what
             # lets an end user run the chain from the CML UI and get a live app.
@@ -190,18 +204,11 @@ class JobManager:
             if parent_key and parent_key in job_ids:
                 parent_job_id = job_ids[parent_key]
 
-            if job_name in existing_jobs:
-                job_id = existing_jobs[job_name]
-                if self.update_job(project_id, job_id, job_config, runtime_identifier, parent_job_id):
-                    job_ids[job_key] = job_id
-                else:
-                    self.failed_jobs.append(job_name)
+            job_id = self.create_job(project_id, job_config, parent_job_id, runtime_identifier)
+            if job_id:
+                job_ids[job_key] = job_id
             else:
-                job_id = self.create_job(project_id, job_config, parent_job_id, runtime_identifier)
-                if job_id:
-                    job_ids[job_key] = job_id
-                else:
-                    self.failed_jobs.append(job_name)
+                self.failed_jobs.append(job_name)
 
         return job_ids
 
