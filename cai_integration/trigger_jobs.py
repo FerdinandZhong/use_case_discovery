@@ -26,7 +26,9 @@ ROOT_JOB_NAME = "Git Repository Sync"
 ROOT_JOB_TIMEOUT = 300    # git fetch + reset; should finish in < 2 min
 BUILD_JOB_NAME = "Build App"
 BUILD_JOB_TIMEOUT = 1800  # npm install + next build
-AUTO_TRIGGER_WINDOW = 120  # how long to wait for CML to auto-trigger Build App before triggering it ourselves
+LAUNCH_JOB_NAME = "Launch Application"
+LAUNCH_JOB_TIMEOUT = 600  # create/replace the Application + wait for running
+AUTO_TRIGGER_WINDOW = 120  # wait this long for CML to auto-trigger a child before triggering it ourselves
 
 
 class JobTrigger:
@@ -159,32 +161,39 @@ class JobTrigger:
             print(f"{ROOT_JOB_NAME} failed")
             return False
 
-        # Build App should be auto-triggered by CML when git_sync succeeds (parent→child),
-        # but that dependency (and its timestamp-based detection) isn't reliable across CML
-        # versions/clock skew — the symptom is a 30-min "waiting to be auto-triggered" hang.
-        # So: briefly look for an auto-triggered run; if none appears, trigger it explicitly.
-        build_id = self.find_job_id(project_id, BUILD_JOB_NAME)
-        if not build_id:
-            print(f"Warning: '{BUILD_JOB_NAME}' job not found — skipping build wait.")
-        else:
-            build_run = self.wait_for_new_run(
-                project_id, build_id, BUILD_JOB_NAME, trigger_epoch, AUTO_TRIGGER_WINDOW
-            )
-            if not build_run:
-                print(f"   {BUILD_JOB_NAME} not auto-triggered within {AUTO_TRIGGER_WINDOW}s — triggering it explicitly.")
-                build_run = self.trigger_job(project_id, build_id)
-                if not build_run:
-                    print(f"   Failed to trigger {BUILD_JOB_NAME}")
-                    return False
-                print(f"   Run ID: {build_run}")
-            if not self.wait_for_job_completion(project_id, build_id, build_run, BUILD_JOB_TIMEOUT):
-                print(f"{BUILD_JOB_NAME} failed")
-                return False
+        # Walk the rest of the chain: Build App → Launch Application. CML *should*
+        # auto-trigger each child when its parent succeeds (parent→child), but that
+        # dependency (and its timestamp detection) isn't reliable — the symptom is a
+        # long "waiting to be auto-triggered" hang. So for each: briefly look for an
+        # auto-triggered run; if none appears, trigger it explicitly.
+        if not self._await_child(project_id, BUILD_JOB_NAME, BUILD_JOB_TIMEOUT, trigger_epoch):
+            return False
+        if not self._await_child(project_id, LAUNCH_JOB_NAME, LAUNCH_JOB_TIMEOUT, trigger_epoch):
+            return False
 
         print("=" * 70)
-        print(f"{ROOT_JOB_NAME} + {BUILD_JOB_NAME} complete. Launch the Application (once):")
-        print("   python cai_integration/deploy_application.py --runtime-identifier <node-runtime> ...")
+        print(f"{ROOT_JOB_NAME} → {BUILD_JOB_NAME} → {LAUNCH_JOB_NAME} complete. Application is live.")
         print("=" * 70)
+        return True
+
+    def _await_child(self, project_id: str, job_name: str, timeout: int, trigger_epoch: float) -> bool:
+        """Wait for a child job to run: prefer the run CML auto-triggers; if none appears
+        within AUTO_TRIGGER_WINDOW, trigger it explicitly. Then wait for completion."""
+        job_id = self.find_job_id(project_id, job_name)
+        if not job_id:
+            print(f"✗ Job not found: {job_name} — run the create-jobs step first.")
+            return False
+        run_id = self.wait_for_new_run(project_id, job_id, job_name, trigger_epoch, AUTO_TRIGGER_WINDOW)
+        if not run_id:
+            print(f"   {job_name} not auto-triggered within {AUTO_TRIGGER_WINDOW}s — triggering it explicitly.")
+            run_id = self.trigger_job(project_id, job_id)
+            if not run_id:
+                print(f"   Failed to trigger {job_name}")
+                return False
+            print(f"   Run ID: {run_id}")
+        if not self.wait_for_job_completion(project_id, job_id, run_id, timeout):
+            print(f"{job_name} failed")
+            return False
         return True
 
 

@@ -87,62 +87,44 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install requests pyyaml
-      - name: Create CML jobs (git_sync -> build)
+      - name: Create CML jobs (git_sync -> build -> launch)
+        # App config is baked into the "Launch Application" job's environment so the
+        # chain can be run from the CML UI and produce a live app.
         env:
           CML_HOST: ${{ secrets.CML_HOST }}
           CML_API_KEY: ${{ secrets.CML_API_KEY }}
           RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          APP_SUBDOMAIN: ${{ github.event.inputs.subdomain || 'ucd-survey' }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: python cai_integration/create_jobs.py --project-id ${{ needs.setup-project.outputs.project_id }}
 
-  trigger-build:
+  run-chain:
     needs: [setup-project, create-jobs]
     runs-on: ubuntu-latest
-    timeout-minutes: 45   # git_sync (fast) + Build App (npm ci + next build)
+    timeout-minutes: 55   # git_sync + Build App (npm install + next build) + Launch Application
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       - run: pip install requests pyyaml
-      - name: Trigger git_sync; wait for Build App (CML auto-triggers it)
+      - name: Run the chain (git_sync -> build -> launch) and wait
         env:
           CML_HOST: ${{ secrets.CML_HOST }}
           CML_API_KEY: ${{ secrets.CML_API_KEY }}
         run: python cai_integration/trigger_jobs.py --project-id ${{ needs.setup-project.outputs.project_id }}
-
-  launch-application:
-    needs: [setup-project, create-jobs, trigger-build]
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - run: pip install requests
-      - name: Create / restart the CML Application
-        env:
-          CML_HOST: ${{ secrets.CML_HOST }}
-          CML_API_KEY: ${{ secrets.CML_API_KEY }}
-          RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
-          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
-          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_MODEL: ${{ secrets.LLM_MODEL }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          python cai_integration/deploy_application.py \
-            --host "$CML_HOST" --api-key "$CML_API_KEY" \
-            --project-id ${{ needs.setup-project.outputs.project_id }} \
-            --subdomain "${{ github.event.inputs.subdomain || 'ucd-survey' }}" \
-            --wait-timeout 300
       - name: Summary
         if: always()
         run: |
           {
             echo "## CML Deploy — ${{ job.status }}"
             echo "- Project: \`${{ needs.setup-project.outputs.project_id }}\`"
-            echo "- App script: \`cai_integration/start-app.sh\` (next start on \$CDSW_APP_PORT)"
+            echo "- Chain: git_sync → Build App → Launch Application (all CML Jobs)"
+            echo "- App script: \`cai_integration/start_app.py\` → \`start-app.sh\` (next start on \$CDSW_APP_PORT)"
             echo "- Auth: Workbench SSO (bypass_authentication=False)"
-            if [ -f /tmp/app_url.txt ]; then echo "- URL: $(cat /tmp/app_url.txt)"; fi
+            echo "- App URL: see the **Launch Application** job log / the CML Applications page."
           } >> "$GITHUB_STEP_SUMMARY"

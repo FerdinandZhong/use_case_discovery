@@ -95,6 +95,26 @@ class JobManager:
             print("WARNING: could not find that runtime via /api/v2/runtimes — if job creation")
             print("   fails, double-check the identifier is registered in this workspace.")
 
+    def _launch_env(self, runtime_identifier: Optional[str]) -> Dict[str, str]:
+        """App config for the Launch Application job, collected from the create-time env.
+        Only non-empty values are included. RUNTIME_IDENTIFIER defaults to the jobs' runtime."""
+        env: Dict[str, str] = {}
+        if runtime_identifier:
+            env["RUNTIME_IDENTIFIER"] = runtime_identifier
+        passthrough = [
+            "ADMIN_TOKEN", "APP_SUBDOMAIN", "APP_NAME", "APP_PUBLIC", "APP_WAIT_TIMEOUT",
+            "LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL", "DATABASE_URL", "SQLITE_PATH",
+            "NEXT_PUBLIC_BASE_PATH",
+        ]
+        for k in passthrough:
+            v = os.environ.get(k)
+            if v:
+                env[k] = v
+        if not env.get("ADMIN_TOKEN"):
+            print("WARNING: ADMIN_TOKEN not in the create-jobs environment — the Launch")
+            print("   Application job will fail without it (the app requires ADMIN_TOKEN).")
+        return env
+
     def list_jobs(self, project_id: str) -> Dict[str, str]:
         print("Listing existing jobs...")
         result = self.make_request("GET", f"projects/{project_id}/jobs")
@@ -159,6 +179,11 @@ class JobManager:
         existing_jobs = self.list_jobs(project_id)
 
         for job_key, job_config in jobs_config.get("jobs", {}).items():
+            # The Launch Application job creates the CML Application, so it needs the app
+            # config in its own environment (baked from the create-time env). This is what
+            # lets an end user run the chain from the CML UI and get a live app.
+            if job_key == "launch":
+                job_config = {**job_config, "environment": {**job_config.get("environment", {}), **self._launch_env(runtime_identifier)}}
             job_name = job_config["name"]
             parent_job_id = None
             parent_key = job_config.get("parent_job_key")
