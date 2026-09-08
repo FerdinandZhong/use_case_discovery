@@ -92,8 +92,17 @@ class JobTrigger:
             )
             for run in (result or {}).get("runs", []):
                 run_id = run.get("id")
+                if not run_id:
+                    continue
+                # An actively-running run after the parent succeeded is unambiguously the
+                # auto-triggered child — accept it regardless of created_at (avoids clock-skew
+                # misses that then collide with an explicit trigger via "already active").
+                status = (run.get("status") or "").lower()
+                if any(s in status for s in ("scheduling", "running", "starting", "pending")):
+                    print(f"   [{int(time.time() - start)}s] Active run detected: {run_id} ({status})")
+                    return run_id
                 created_at = run.get("created_at", "")
-                if not run_id or not created_at:
+                if not created_at:
                     continue
                 try:
                     from datetime import datetime, timezone
@@ -104,7 +113,6 @@ class JobTrigger:
                         print(f"   [{int(time.time() - start)}s] New run detected: {run_id}")
                         return run_id
                 except Exception:
-                    # Unparseable timestamp: optimistically accept the most-recent run.
                     return run_id
             time.sleep(15)
         print(f"   Timed out waiting for {job_name} to be auto-triggered ({timeout}s)")
@@ -188,13 +196,28 @@ class JobTrigger:
             print(f"   {job_name} not auto-triggered within {AUTO_TRIGGER_WINDOW}s — triggering it explicitly.")
             run_id = self.trigger_job(project_id, job_id)
             if not run_id:
-                print(f"   Failed to trigger {job_name}")
-                return False
-            print(f"   Run ID: {run_id}")
+                # Trigger can 400 with "already active" if CML auto-triggered it after all
+                # (detection just missed it) — grab the currently-active/latest run and wait.
+                run_id = self._latest_run(project_id, job_id)
+                if not run_id:
+                    print(f"   Failed to trigger {job_name} and no active run found")
+                    return False
+                print(f"   Using already-active run: {run_id}")
+            else:
+                print(f"   Run ID: {run_id}")
         if not self.wait_for_job_completion(project_id, job_id, run_id, timeout):
             print(f"{job_name} failed")
             return False
         return True
+
+    def _latest_run(self, project_id: str, job_id: str) -> Optional[str]:
+        """Most-recent run id for a job (prefer an active one), by created_at."""
+        result = self.make_request("GET", f"projects/{project_id}/jobs/{job_id}/runs", params={"page_size": 10})
+        runs = (result or {}).get("runs", [])
+        for run in runs:  # prefer an actively-running run
+            if any(s in (run.get("status") or "").lower() for s in ("scheduling", "running", "starting", "pending")):
+                return run.get("id")
+        return max(runs, key=lambda r: r.get("created_at", ""), default={}).get("id")
 
 
     def sync_only(self, project_id: str) -> bool:
