@@ -9,7 +9,7 @@
 set -euo pipefail
 
 export PORT="${CDSW_APP_PORT:-8080}"
-export HOSTNAME="0.0.0.0"
+export HOSTNAME="127.0.0.1"
 export NEXT_TELEMETRY_DISABLED=1
 
 # Put Node/npm on PATH — no-op on a Node runtime; otherwise reuses (or installs)
