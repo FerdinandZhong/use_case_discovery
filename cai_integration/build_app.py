@@ -54,7 +54,11 @@ def main() -> None:
     # Stock CML runtimes are Python-only — ensure_node.sh installs Node into project
     # storage if npm is missing (no-op on a Node runtime), then we build. One shell
     # so the PATH export from sourcing carries into npm.
-    run(". cai_integration/ensure_node.sh && npm ci && npm run build")
+    # `npm install` (not `npm ci`): the committed package-lock.json is generated on
+    # macOS and omits linux-only optional native deps (@emnapi/*), so strict `npm ci`
+    # fails on the linux CML runner. install resolves per-platform.
+    # ponytail: non-strict install, acceptable ceiling; pin a linux lockfile if repro matters.
+    run(". cai_integration/ensure_node.sh && npm install --no-audit --no-fund && npm run build")
     print("Build complete: .next produced, node_modules installed.")
 
 

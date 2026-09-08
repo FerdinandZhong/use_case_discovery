@@ -25,12 +25,12 @@ export SQLITE_PATH="${SQLITE_PATH:-/home/cdsw/data/survey.db}"
 mkdir -p "$(dirname "$SQLITE_PATH")"
 
 # Normal path: the "Build App" CML Job (cai_integration/build_app.py) already ran
-# `npm ci && npm run build`, so node_modules and .next exist on project storage and
-# we start in seconds. The guards below only fire on the CML-UI deploy path where no
-# build Job ran — a one-time slow first start.
+# `npm install && npm run build`, so node_modules and .next exist on project storage
+# and we start in seconds. The guards below only fire on the CML-UI deploy path where
+# no build Job ran — a one-time slow first start.
 if [ ! -d node_modules ]; then
-  echo "[start-app] node_modules missing — running npm ci (no build Job ran?)"
-  npm ci
+  echo "[start-app] node_modules missing — running npm install (no build Job ran?)"
+  npm install --no-audit --no-fund   # not `npm ci`: macOS lockfile omits linux optional deps
 fi
 if [ ! -d .next ]; then
   echo "[start-app] .next missing — building once (no build Job ran?)"
