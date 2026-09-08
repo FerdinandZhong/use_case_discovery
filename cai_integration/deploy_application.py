@@ -76,19 +76,16 @@ def create_application(host: str, api_key: str, project_id: str, *, payload: dic
     return resp.json()
 
 
-def update_application(host: str, api_key: str, project_id: str, app_id: str, *, payload: dict) -> dict:
-    """PATCH an existing Application so a redeploy picks up config changes (script,
-    env, runtime) — a bare restart keeps the old config."""
+def delete_application(host: str, api_key: str, project_id: str, app_id: str) -> None:
+    """DELETE an existing Application so a redeploy can recreate it with the current
+    config (script/env/runtime). CML's PATCH uses a different request schema than POST
+    and rejects the create payload; delete+create is the reliable converge path. Only
+    the Application *definition* is removed — project storage (SQLite data) is untouched."""
     url = f"{host}/api/v2/projects/{project_id}/applications/{app_id}"
-    resp = requests.patch(
-        url, json=payload,
-        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-        timeout=60,
-    )
+    resp = requests.delete(url, headers={"Authorization": f"Bearer {api_key}"}, timeout=60)
     if resp.status_code >= 400:
-        print(f"✗ Update failed ({resp.status_code}): {resp.text}", file=sys.stderr)
+        print(f"✗ Delete failed ({resp.status_code}): {resp.text}", file=sys.stderr)
         resp.raise_for_status()
-    return resp.json() if resp.text else {"id": app_id}
 
 
 def normalize_host(host: str) -> str:
@@ -240,23 +237,20 @@ def main() -> None:
         database_url=args.database_url, sqlite_path=args.sqlite_path, base_path=args.base_path,
     )
 
-    # Idempotent: if the Application exists, PATCH it to the current config (so a
-    # changed script/env/runtime takes effect — a bare restart would keep the old
-    # config) then restart. Otherwise create it.
+    # Idempotent: delete any existing Application, then create with the current config
+    # (so a changed script/env/runtime always takes effect). CML PATCH rejects the
+    # create payload, so delete+create is the reliable converge path.
     existing = find_application(host, args.api_key, args.project_id, args.name, args.subdomain)
     if existing:
-        update_application(host, args.api_key, args.project_id, existing, payload=payload)
-        app = restart_application(host, args.api_key, args.project_id, existing)
-        app_id = app.get("id", existing)
-        print(f"✓ Application updated + restarted: {app_id}")
-    else:
-        app = create_application(host, args.api_key, args.project_id, payload=payload)
-        app_id = app.get("id")
-        print("✓ Application created:")
-        print(f"   id:        {app_id}")
-        print(f"   subdomain: {app.get('subdomain')}")
-        if not args.public:
-            print("   auth:      Workbench SSO (bypass_authentication=False)")
+        print(f"   Existing Application {existing} found — deleting to apply current config.")
+        delete_application(host, args.api_key, args.project_id, existing)
+    app = create_application(host, args.api_key, args.project_id, payload=payload)
+    app_id = app.get("id")
+    print("✓ Application created:")
+    print(f"   id:        {app_id}")
+    print(f"   subdomain: {app.get('subdomain')}")
+    if not args.public:
+        print("   auth:      Workbench SSO (bypass_authentication=False)")
 
     # Fail loudly if the app doesn't actually come up (broken runtime, missing
     # dep, port issue) — otherwise CI reports a false green.
