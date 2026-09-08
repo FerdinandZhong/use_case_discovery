@@ -18,8 +18,10 @@ import sys
 sys.path.insert(0, os.path.join(os.getcwd(), "cai_integration"))
 sys.path.insert(0, "cai_integration")
 
+import time  # noqa: E402
+
 from deploy_application import (  # noqa: E402
-    _build_payload, normalize_host, find_application, delete_application,
+    _build_payload, normalize_host, find_applications, delete_application,
     create_application, wait_for_running, emit_url,
 )
 
@@ -51,10 +53,12 @@ def main() -> None:
         base_path=os.environ.get("NEXT_PUBLIC_BASE_PATH"),
     )
 
-    existing = find_application(host, api_key, project_id, name, subdomain)
+    existing = find_applications(host, api_key, project_id, name, subdomain)
+    for app_id in existing:
+        print(f"Deleting existing Application {app_id} to apply current config / free the port.")
+        delete_application(host, api_key, project_id, app_id)
     if existing:
-        print(f"Existing Application {existing} — deleting to apply current config.")
-        delete_application(host, api_key, project_id, existing)
+        time.sleep(10)  # let the old workloads terminate and release the app port
     app = create_application(host, api_key, project_id, payload=payload)
     app_id = app.get("id")
     print(f"Application created: {app_id} (subdomain: {subdomain})")

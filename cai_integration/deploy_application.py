@@ -98,17 +98,20 @@ def normalize_host(host: str) -> str:
     return host
 
 
-def find_application(host: str, api_key: str, project_id: str,
-                     name: str, subdomain: str) -> str | None:
-    """Return the id of an existing Application matching name or subdomain, else None."""
+def find_applications(host: str, api_key: str, project_id: str,
+                      name: str, subdomain: str) -> list[str]:
+    """Return the ids of ALL Applications matching name or subdomain. Multiple can
+    accumulate from repeated deploys, and stale ones hold the app port (EADDRINUSE),
+    so callers delete every match, not just the first."""
     url = f"{host}/api/v2/projects/{project_id}/applications"
     resp = requests.get(url, headers={"Authorization": f"Bearer {api_key}"}, timeout=60)
     if resp.status_code >= 400:
-        return None
-    for app in resp.json().get("applications", []):
-        if app.get("name") == name or app.get("subdomain") == subdomain:
-            return app.get("id")
-    return None
+        return []
+    return [
+        app.get("id")
+        for app in resp.json().get("applications", [])
+        if (app.get("name") == name or app.get("subdomain") == subdomain) and app.get("id")
+    ]
 
 
 def restart_application(host: str, api_key: str, project_id: str, app_id: str) -> dict:
@@ -237,13 +240,16 @@ def main() -> None:
         database_url=args.database_url, sqlite_path=args.sqlite_path, base_path=args.base_path,
     )
 
-    # Idempotent: delete any existing Application, then create with the current config
-    # (so a changed script/env/runtime always takes effect). CML PATCH rejects the
-    # create payload, so delete+create is the reliable converge path.
-    existing = find_application(host, args.api_key, args.project_id, args.name, args.subdomain)
+    # Idempotent: delete ALL existing Applications matching name/subdomain, then create
+    # with the current config. CML PATCH rejects the create payload, so delete+create is
+    # the reliable converge path; deleting *every* match frees the app port that stale
+    # duplicates from prior deploys would otherwise hold (EADDRINUSE).
+    existing = find_applications(host, args.api_key, args.project_id, args.name, args.subdomain)
+    for app_id in existing:
+        print(f"   Deleting existing Application {app_id} to apply current config / free the port.")
+        delete_application(host, args.api_key, args.project_id, app_id)
     if existing:
-        print(f"   Existing Application {existing} found — deleting to apply current config.")
-        delete_application(host, args.api_key, args.project_id, existing)
+        time.sleep(10)  # let the old workloads terminate and release the port
     app = create_application(host, args.api_key, args.project_id, payload=payload)
     app_id = app.get("id")
     print("✓ Application created:")

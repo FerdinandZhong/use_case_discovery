@@ -38,4 +38,11 @@ if [ ! -d .next ]; then
 fi
 
 echo "[start-app] starting on port ${PORT} (backend: ${DATABASE_URL:+postgres}${DATABASE_URL:-sqlite})"
-exec npx next start -p "${PORT}" -H "${HOSTNAME}"
+# Retry a few times: when an Application is replaced, a prior instance may still be
+# releasing the port (EADDRINUSE) for a few seconds. A successful `next start` blocks
+# forever, so the loop only re-enters on failure.
+for attempt in 1 2 3 4 5; do
+  npx next start -p "${PORT}" -H "${HOSTNAME}" && break
+  echo "[start-app] next start exited (attempt ${attempt}) — port may still be freeing; retrying in 6s"
+  sleep 6
+done
