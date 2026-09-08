@@ -20,13 +20,15 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 export function isAdmin(req: NextRequest): boolean {
-  const expected = process.env.ADMIN_TOKEN;
+  // Trim: env vars piped through GitHub secrets → CML job/app env commonly pick up a
+  // trailing newline, which would make the byte-compare fail even when the token matches.
+  const expected = process.env.ADMIN_TOKEN?.trim();
   if (!expected) return false;
 
   const auth = req.headers.get('authorization');
-  if (auth?.startsWith('Bearer ') && safeEqual(auth.slice(7), expected)) return true;
+  if (auth?.startsWith('Bearer ') && safeEqual(auth.slice(7).trim(), expected)) return true;
 
-  const cookie = req.cookies.get('admin_token')?.value;
+  const cookie = req.cookies.get('admin_token')?.value?.trim();
   if (cookie && safeEqual(cookie, expected)) return true;
 
   return false;
