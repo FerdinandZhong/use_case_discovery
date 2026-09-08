@@ -114,6 +114,9 @@ jobs:
           RUNTIME_IDENTIFIER: ${{ secrets.RUNTIME_IDENTIFIER }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           APP_SUBDOMAIN: ${{ github.event.inputs.subdomain || 'ucd-survey' }}
+          # Customer-facing survey: accept unauthenticated CAI requests (respondents have no
+          # CAI account). App still gates admin via ADMIN_TOKEN. Set to '0' to require SSO.
+          APP_PUBLIC: '1'
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           LLM_MODEL: ${{ secrets.LLM_MODEL }}

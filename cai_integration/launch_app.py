@@ -44,10 +44,15 @@ def main() -> None:
     if missing:
         raise RuntimeError(f"launch_app: missing required values: {', '.join(missing)}")
 
+    # Customer-facing survey: default to unauthenticated CAI access so external
+    # respondents (no CAI account) can reach it — the app gates admin actions with
+    # ADMIN_TOKEN and respondent access with unguessable /s/<slug> links. Set
+    # APP_PUBLIC=0 to front it with Workbench SSO instead.
+    public = os.environ.get("APP_PUBLIC", "1") != "0"
     payload = _build_payload(
         name=name, subdomain=subdomain, script="cai_integration/start_app.py",
         runtime_identifier=runtime, admin_token=admin_token, cpu=2, memory=4,
-        bypass_authentication=(os.environ.get("APP_PUBLIC") == "1"),
+        bypass_authentication=public,
         database_url=os.environ.get("DATABASE_URL"),
         sqlite_path=os.environ.get("SQLITE_PATH", "/home/cdsw/data/survey.db"),
         base_path=os.environ.get("NEXT_PUBLIC_BASE_PATH"),
@@ -62,6 +67,7 @@ def main() -> None:
     app = create_application(host, api_key, project_id, payload=payload)
     app_id = app.get("id")
     print(f"Application created: {app_id} (subdomain: {subdomain})")
+    print(f"   auth: {'unauthenticated (CAI public) — app uses ADMIN_TOKEN + slug secrecy' if public else 'Workbench SSO'}")
 
     if not wait_for_running(host, api_key, project_id, app_id, int(os.environ.get("APP_WAIT_TIMEOUT", "300"))):
         raise RuntimeError("Application did not reach 'running' — check the Application logs.")
