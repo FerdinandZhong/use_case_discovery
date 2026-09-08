@@ -25,7 +25,8 @@ from typing import Optional
 ROOT_JOB_NAME = "Git Repository Sync"
 ROOT_JOB_TIMEOUT = 300    # git fetch + reset; should finish in < 2 min
 BUILD_JOB_NAME = "Build App"
-BUILD_JOB_TIMEOUT = 1800  # npm ci + next build; CML auto-triggers it after git_sync
+BUILD_JOB_TIMEOUT = 1800  # npm install + next build
+AUTO_TRIGGER_WINDOW = 120  # how long to wait for CML to auto-trigger Build App before triggering it ourselves
 
 
 class JobTrigger:
@@ -158,17 +159,24 @@ class JobTrigger:
             print(f"{ROOT_JOB_NAME} failed")
             return False
 
-        # CML auto-triggers Build App on git_sync success. Wait for it so callers
-        # (CI) don't launch the Application against a half-written .next.
+        # Build App should be auto-triggered by CML when git_sync succeeds (parent→child),
+        # but that dependency (and its timestamp-based detection) isn't reliable across CML
+        # versions/clock skew — the symptom is a 30-min "waiting to be auto-triggered" hang.
+        # So: briefly look for an auto-triggered run; if none appears, trigger it explicitly.
         build_id = self.find_job_id(project_id, BUILD_JOB_NAME)
         if not build_id:
             print(f"Warning: '{BUILD_JOB_NAME}' job not found — skipping build wait.")
         else:
             build_run = self.wait_for_new_run(
-                project_id, build_id, BUILD_JOB_NAME, trigger_epoch, BUILD_JOB_TIMEOUT
+                project_id, build_id, BUILD_JOB_NAME, trigger_epoch, AUTO_TRIGGER_WINDOW
             )
             if not build_run:
-                return False
+                print(f"   {BUILD_JOB_NAME} not auto-triggered within {AUTO_TRIGGER_WINDOW}s — triggering it explicitly.")
+                build_run = self.trigger_job(project_id, build_id)
+                if not build_run:
+                    print(f"   Failed to trigger {BUILD_JOB_NAME}")
+                    return False
+                print(f"   Run ID: {build_run}")
             if not self.wait_for_job_completion(project_id, build_id, build_run, BUILD_JOB_TIMEOUT):
                 print(f"{BUILD_JOB_NAME} failed")
                 return False
