@@ -70,7 +70,9 @@ listens on `PORT`/`CDSW_APP_PORT` (8080).
 
 ## Deploy — Option 2: Cloudera AI Workbench Application
 See **`cai_integration/README.md`**. In short: point a CML Application at
-`cai_integration/start-app.sh` with a Node 20+ runtime, and keep unauthenticated access **off** (SSO).
+`cai_integration/start-app.sh` with any ML runtime, and keep unauthenticated access **off** (SSO).
+(Stock runtimes are Python; if `npm` is absent, `cai_integration/ensure_node.sh` installs Node 20 into
+project storage on the first build — a Node 20+ runtime skips that download.)
 For a git-backed one-command bootstrap (create project → build Job → deploy),
 `cai_integration/{setup_project,create_jobs,trigger_jobs,deploy_application}.py` automate it via CML API v2.
 

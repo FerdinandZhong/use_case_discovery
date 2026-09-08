@@ -51,8 +51,10 @@ def main() -> None:
 
     # NEXT_TELEMETRY_DISABLED keeps the build quiet/offline-friendly.
     os.environ.setdefault("NEXT_TELEMETRY_DISABLED", "1")
-    run("npm ci")
-    run("npm run build")
+    # Stock CML runtimes are Python-only — ensure_node.sh installs Node into project
+    # storage if npm is missing (no-op on a Node runtime), then we build. One shell
+    # so the PATH export from sourcing carries into npm.
+    run(". cai_integration/ensure_node.sh && npm ci && npm run build")
     print("Build complete: .next produced, node_modules installed.")
 
 

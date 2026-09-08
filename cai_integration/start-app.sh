@@ -12,6 +12,10 @@ export PORT="${CDSW_APP_PORT:-8080}"
 export HOSTNAME="0.0.0.0"
 export NEXT_TELEMETRY_DISABLED=1
 
+# Put Node/npm on PATH — no-op on a Node runtime; otherwise reuses (or installs)
+# the user-space Node the Build Job placed in project storage.
+. "$(dirname "$0")/ensure_node.sh"
+
 # Secrets/config come from the Application's Environment settings (not committed).
 : "${ADMIN_TOKEN:?ADMIN_TOKEN must be set in the CML Application environment}"
 

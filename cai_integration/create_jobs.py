@@ -67,17 +67,17 @@ class JobManager:
     def get_runtime_identifier(self) -> Optional[str]:
         runtime_id = os.environ.get("RUNTIME_IDENTIFIER")
         if not runtime_id:
-            # Jobs without a Node 20+ runtime are guaranteed to fail deep in the
-            # build with a confusing error — fail fast here instead.
+            # CML needs a runtime to create a job; fail fast rather than deep in the run.
             print("ERROR: RUNTIME_IDENTIFIER is not set.")
-            print("   The git_sync/build jobs and the Application need a Node 20+ ML Runtime")
-            print("   (stock CML runtimes are Python). Register one and set RUNTIME_IDENTIFIER —")
-            print("   see cai_integration/README.md.")
+            print("   The jobs and the Application need an ML Runtime identifier. A stock")
+            print("   Python runtime is fine — cai_integration/ensure_node.sh bootstraps Node")
+            print("   into project storage if npm is missing. Set RUNTIME_IDENTIFIER — see")
+            print("   cai_integration/README.md.")
             return None
         print(f"Using runtime from environment: {runtime_id[:80]}...")
         if "node" not in runtime_id.lower():
-            print("WARNING: RUNTIME_IDENTIFIER does not contain 'node' — stock CML runtimes are")
-            print("   Python and will fail `npm ci`/`next start`. Verify this is a Node 20+ runtime.")
+            print("NOTE: runtime is not a Node runtime — ensure_node.sh will install Node 20 into")
+            print("   project storage on the first build (adds ~1 min + ~30MB download, once).")
         self._verify_runtime_exists(runtime_id)  # best-effort, non-fatal
         return runtime_id
 

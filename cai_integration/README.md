@@ -8,12 +8,16 @@ Runs the survey/cockpit app as a **CML Application**, using the same
 `npm ci && npm run build` → launch the Application (`start-app.sh` runs `next start`
 on `$CDSW_APP_PORT`, starting in seconds because the build already happened).
 
-## Prerequisite: a Node 20+ ML Runtime
-The scripts default to no runtime; the Jobs and the Application **must** use a
-**Node 20+ ML Runtime** (npm + git on PATH). The stock Cloudera runtimes are Python.
-If your workspace has no Node runtime, register one as a Custom Runtime (this repo's
-`Dockerfile` base, `node:20-slim`, is a good starting point) and note its **runtime
-identifier**. Everything else keys off that identifier.
+## Runtime: any ML Runtime (Node auto-installed if missing)
+Set `RUNTIME_IDENTIFIER` to any ML Runtime with `git` + internet (a **stock Python
+runtime is fine**). If `npm` isn't on that runtime, `cai_integration/ensure_node.sh`
+downloads a user-space **Node 20** into project storage (`$HOME/.local/node`, NFS-persistent)
+on the first Build Job — shared by the Application, ~30 MB, downloaded once. The scripts
+require *some* runtime identifier (fail fast if unset).
+
+Prefer a purpose-built **Node 20+ runtime** if your workspace has one (skips the download):
+register a Custom Runtime from this repo's `Dockerfile` (`node:20-slim`) and use its identifier.
+`ensure_node.sh` is a no-op when `npm` is already on PATH.
 
 ## One-command bootstrap (git-backed)
 From any machine with Python + `requests` + `pyyaml` (local or CI):
