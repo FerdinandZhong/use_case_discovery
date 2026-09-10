@@ -1,0 +1,74 @@
+name: AI Use Case Discovery
+description: >-
+  A two-stage tool for the Cloudera AI Use Case Discovery Workshop: a shareable
+  pre-discovery survey customers fill in, and a facilitator "cockpit" that turns the
+  inputs into the live workshop artifacts (Value x Feasibility matrix, AI Canvas,
+  roadmap + RACI) with an optional multi-agent pass. English / 简体中文.
+author: Qishuai Zhong
+specification_version: 1.0
+prototype_version: 1.0
+date: "2026-09-09"
+
+# Prompted in the AMP deploy form. ADMIN_TOKEN is required; the rest are optional.
+# CML exposes these as project environment variables, available to all tasks below.
+environment_variables:
+  ADMIN_TOKEN:
+    default: ""
+    description: >-
+      Shared admin/facilitator secret. Guards /admin and the workshop cockpit. Use a
+      strong random value, e.g. the output of: openssl rand -hex 24
+    required: true
+  APP_SUBDOMAIN:
+    default: "ucd-survey"
+    description: "URL subdomain for the Application (a-z, 0-9, hyphen)."
+    required: false
+  LLM_BASE_URL:
+    default: ""
+    description: >-
+      Optional. OpenAI-compatible endpoint for the workshop agent pass (e.g. Cloudera
+      AI Inference / vLLM). Leave blank to run without AI — the app still works, only
+      the agent buttons are disabled. Can also be set later in-app at /admin/settings.
+    required: false
+  LLM_API_KEY:
+    default: ""
+    description: "Optional. API key for the LLM endpoint."
+    required: false
+  LLM_MODEL:
+    default: ""
+    description: "Optional. Model id for the LLM endpoint."
+    required: false
+  DATABASE_URL:
+    default: ""
+    description: >-
+      Optional. Postgres connection URL. Leave blank to use embedded SQLite in project
+      storage (default; data stays on Cloudera).
+    required: false
+
+runtimes:
+  - editor: PBJ Workbench
+    kernel: Python 3.11
+    edition: Standard
+
+tasks:
+  # Any ML runtime works: the app is Node/Next.js, and cai_integration/ensure_node.sh
+  # installs Node 20 into project storage if npm is not already on PATH.
+  - type: run_session
+    name: Build the app
+    script: cai_integration/build_app.py
+    short_summary: Install Node + npm dependencies and build the Next.js app (npm install && npm run build).
+    kernel: python3
+    cpu: 4
+    memory: 16
+
+  - type: start_application
+    name: AI Use Case Discovery
+    subdomain: ucd-survey
+    script: cai_integration/start_app.py
+    short_summary: Serve the survey (/s), sales deck (/d), admin, and the workshop cockpit.
+    long_summary: >-
+      Runs `next start` on $CDSW_APP_PORT. Unauthenticated CAI access is on so external
+      respondents (no CAI account) can reach the survey; the app itself gates /admin and
+      the cockpit with ADMIN_TOKEN and uses unguessable /s/<slug> links for respondents.
+    cpu: 2
+    memory: 4
+    bypass_authentication: true

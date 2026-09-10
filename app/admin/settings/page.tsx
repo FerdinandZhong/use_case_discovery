@@ -3,10 +3,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { useT } from '@/lib/i18n/locale';
+import LanguageToggle from '@/components/LanguageToggle';
 
 const TOKEN_KEY = 'ucd_admin_token';
 
 export default function SettingsPage() {
+  const t = useT();
   const [token, setToken] = useState('');
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,8 +91,11 @@ export default function SettingsPage() {
     return (
       <main className="min-h-screen grid place-items-center px-6">
         <div className="w-full max-w-sm">
-          <div className="text-cloudera-orange font-bold tracking-widest text-sm">CLOUDERA</div>
-          <h1 className="mt-3 text-2xl font-semibold">Admin settings</h1>
+          <div className="flex items-center justify-between">
+            <div className="text-cloudera-orange font-bold tracking-widest text-sm">CLOUDERA</div>
+            <LanguageToggle tone="light" />
+          </div>
+          <h1 className="mt-3 text-2xl font-semibold">{t('settings.signinTitle')}</h1>
           <input
             type="password"
             value={token}
@@ -99,7 +105,7 @@ export default function SettingsPage() {
             className="mt-4 w-full rounded-standard border border-surface-border px-3 py-2 outline-none focus:border-cloudera-orange"
           />
           <button onClick={() => load(token)} className="mt-3 w-full rounded-standard bg-cloudera-navy px-4 py-2.5 font-medium text-white">
-            {loading ? 'Checking…' : 'Sign in'}
+            {loading ? t('admin.signin.checking') : t('admin.signin.button')}
           </button>
           {error && <p className="mt-3 text-sm text-cloudera-orange">{error}</p>}
         </div>
@@ -115,37 +121,38 @@ export default function SettingsPage() {
         <div className="mx-auto max-w-2xl px-6 py-6 flex items-center justify-between">
           <div>
             <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
-            <h1 className="mt-1 text-xl font-semibold">LLM Settings</h1>
+            <h1 className="mt-1 text-xl font-semibold">{t('settings.header')}</h1>
           </div>
-          <Link href="/admin" className="rounded-standard bg-white/10 px-3 py-2 text-sm hover:bg-white/20">← Admin</Link>
+          <div className="flex items-center gap-2">
+            <LanguageToggle tone="dark" />
+            <Link href="/admin" className="rounded-standard bg-white/10 px-3 py-2 text-sm hover:bg-white/20">{t('settings.backToAdmin')}</Link>
+          </div>
         </div>
       </header>
 
       <div className="mx-auto max-w-2xl px-6 py-10">
         <div className="rounded-large border border-surface-border bg-white p-6 shadow-card">
           <p className="text-sm text-cloudera-slate">
-            Powers the workshop cockpit’s AI features. Any OpenAI-compatible endpoint (Cloudera AI
-            Inference, vLLM, OpenAI). These override the <code>LLM_*</code> env vars. Currently sourced
-            from: <b>{meta.source}</b>.
+            {t('settings.intro.pre')} <code>LLM_*</code> {t('settings.intro.post')} <b>{meta.source}</b>.
           </p>
 
-          <label className="mt-5 block text-sm font-medium">Base URL <span className="text-cloudera-slate">(include /v1)</span></label>
+          <label className="mt-5 block text-sm font-medium">{t('settings.baseUrl')} <span className="text-cloudera-slate">{t('settings.baseUrl.hint')}</span></label>
           <input value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://<endpoint>/v1" className={inputCls} />
 
-          <label className="mt-4 block text-sm font-medium">Model</label>
-          <input value={model} onChange={(e) => setModel(e.target.value)} placeholder="model id as deployed" className={inputCls} />
+          <label className="mt-4 block text-sm font-medium">{t('settings.model')}</label>
+          <input value={model} onChange={(e) => setModel(e.target.value)} placeholder={t('settings.model.placeholder')} className={inputCls} />
 
           <label className="mt-4 block text-sm font-medium">
-            API key {meta.hasKey && <span className="text-cloudera-slate">(stored ••••{meta.keyLast4} — leave blank to keep)</span>}
+            {t('settings.apiKey')} {meta.hasKey && <span className="text-cloudera-slate">{t('settings.apiKey.stored', { last4: meta.keyLast4 })}</span>}
           </label>
-          <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder={meta.hasKey ? '•••• (unchanged)' : 'sk-…'} className={inputCls} />
+          <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder={meta.hasKey ? t('settings.apiKey.placeholderUnchanged') : 'sk-…'} className={inputCls} />
 
           <div className="mt-6 flex items-center gap-3">
-            <button onClick={save} className="rounded-standard bg-cloudera-navy px-5 py-2.5 font-medium text-white">Save</button>
+            <button onClick={save} className="rounded-standard bg-cloudera-navy px-5 py-2.5 font-medium text-white">{t('settings.save')}</button>
             <button onClick={runTest} disabled={testing} className="inline-flex items-center gap-2 rounded-standard border border-surface-border px-4 py-2.5 font-medium hover:border-cloudera-orange disabled:opacity-40">
-              {testing ? <Loader2 size={16} className="animate-spin" /> : null} Test connection
+              {testing ? <Loader2 size={16} className="animate-spin" /> : null} {t('settings.test')}
             </button>
-            {saved && <span className="text-sm text-green-600">Saved</span>}
+            {saved && <span className="text-sm text-green-600">{t('settings.saved')}</span>}
           </div>
 
           {test && (
@@ -155,9 +162,7 @@ export default function SettingsPage() {
           )}
           {error && <p className="mt-4 text-sm text-cloudera-orange">{error}</p>}
 
-          <p className="mt-6 text-xs text-cloudera-slate">
-            Note: the key is stored at rest in the app database. Acceptable on-prem / Workbench; rotate if exposed.
-          </p>
+          <p className="mt-6 text-xs text-cloudera-slate">{t('settings.note')}</p>
         </div>
       </div>
     </main>

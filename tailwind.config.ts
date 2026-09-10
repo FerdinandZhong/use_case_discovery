@@ -21,7 +21,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'SF Pro Text', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['Inter', 'Noto Sans SC', 'SF Pro Text', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       borderRadius: {
         standard: '8px',

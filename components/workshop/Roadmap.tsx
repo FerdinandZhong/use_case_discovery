@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Loader2, RefreshCw } from 'lucide-react';
 import type { DataAsk, WorkshopPack, WorkshopUseCase } from '@/lib/workshop';
+import { useT } from '@/lib/i18n/locale';
 
 interface Props {
   pack: WorkshopPack;
@@ -16,6 +17,7 @@ function nameOf(useCases: WorkshopUseCase[], id: string): string {
 }
 
 export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
+  const t = useT();
   const roadmap = pack.roadmap;
   const raci = roadmap?.raci ?? [];
   const [rebuilding, setRebuilding] = useState(false);
@@ -42,7 +44,7 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
       {/* Backlog */}
       <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold">Prioritized backlog (MVP)</h3>
+          <h3 className="font-semibold">{t('roadmap.backlog.title')}</h3>
           <button
             onClick={async () => {
               setRebuilding(true);
@@ -53,16 +55,15 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
               }
             }}
             disabled={rebuilding}
-            title="Re-run the synthesis over the current use cases"
+            title={t('roadmap.rebuild.title')}
             className="inline-flex items-center gap-1.5 rounded-standard border border-surface-border px-2.5 py-1 text-xs font-medium text-cloudera-navy hover:border-cloudera-orange disabled:opacity-40"
           >
-            {rebuilding ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />} Rebuild backlog
+            {rebuilding ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />} {t('roadmap.rebuild')}
           </button>
         </div>
         {missing.length > 0 && (
           <p className="mt-2 rounded-standard bg-orange-50 px-3 py-2 text-xs text-cloudera-orange">
-            {missing.length} use case{missing.length === 1 ? '' : 's'} not in the backlog yet
-            ({missing.map((u) => u.name).join(', ')}) — click <b>Rebuild backlog</b>.
+            {t('roadmap.missing', { n: missing.length, names: missing.map((u) => u.name).join(', ') })}
           </p>
         )}
         {roadmap?.backlog?.length ? (
@@ -78,23 +79,23 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
                   {i + 1}. {nameOf(pack.useCases, b.useCaseId)}
                   {b.useCaseId === focusId && (
                     <span className="ml-2 rounded-pill bg-cloudera-orange px-2 py-0.5 text-[10px] font-bold uppercase text-white">
-                      Lead
+                      {t('roadmap.lead')}
                     </span>
                   )}
                 </div>
-                <div className="mt-1 text-sm"><span className="text-cloudera-slate">MVP:</span> {b.mvp}</div>
-                <div className="mt-1 text-sm"><span className="text-cloudera-slate">Next:</span> {b.nextSteps}</div>
+                <div className="mt-1 text-sm"><span className="text-cloudera-slate">{t('roadmap.mvp')}</span> {b.mvp}</div>
+                <div className="mt-1 text-sm"><span className="text-cloudera-slate">{t('roadmap.next')}</span> {b.nextSteps}</div>
               </li>
             ))}
           </ol>
         ) : (
-          <p className="mt-3 text-sm text-cloudera-slate">Not generated yet.</p>
+          <p className="mt-3 text-sm text-cloudera-slate">{t('roadmap.notGenerated')}</p>
         )}
 
         {/* Reference architecture */}
         {pack.architecture && (
           <div className="mt-6">
-            <h3 className="font-semibold">Draft reference architecture</h3>
+            <h3 className="font-semibold">{t('roadmap.arch.title')}</h3>
             <p className="mt-1 text-sm text-cloudera-slate">{pack.architecture.notes}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {pack.architecture.components.map((c) => (
@@ -113,13 +114,13 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
 
       {/* RACI */}
       <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
-        <h3 className="font-semibold">RACI — who owns what next</h3>
+        <h3 className="font-semibold">{t('roadmap.raci.title')}</h3>
         {raci.length ? (
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="text-left text-cloudera-slate">
-                  <th className="py-1 pr-2 font-medium">Task</th>
+                  <th className="py-1 pr-2 font-medium">{t('roadmap.raci.task')}</th>
                   <th className="py-1 px-1 font-medium">R</th>
                   <th className="py-1 px-1 font-medium">A</th>
                   <th className="py-1 px-1 font-medium">C</th>
@@ -140,42 +141,42 @@ export default function Roadmap({ pack, focusId, onEdit, onRebuild }: Props) {
             </table>
           </div>
         ) : (
-          <p className="mt-3 text-sm text-cloudera-slate">Not generated yet.</p>
+          <p className="mt-3 text-sm text-cloudera-slate">{t('roadmap.notGenerated')}</p>
         )}
-        <p className="mt-3 text-xs text-cloudera-slate">Edit any cell — changes autosave.</p>
+        <p className="mt-3 text-xs text-cloudera-slate">{t('roadmap.raci.autosave')}</p>
       </div>
 
       {/* Phase 05 · the data ask — the follow-up obligation. The #1 miss in no-survey sessions. */}
       <div className="rounded-large border border-cloudera-orange bg-orange-50 p-5 shadow-card lg:col-span-2">
-        <h3 className="font-semibold text-cloudera-navy">Data ask — the follow-up obligation</h3>
+        <h3 className="font-semibold text-cloudera-navy">{t('roadmap.dataAsk.title')}</h3>
         <p className="mt-1 text-xs text-cloudera-slate">
-          Close with a concrete request: <i>“to build this, send us X — owner Y — by Z.”</i> This is what converts the room’s energy into a commitment.
+          {t('roadmap.dataAsk.desc.pre')} <i>{t('roadmap.dataAsk.desc.quote')}</i> {t('roadmap.dataAsk.desc.post')}
         </p>
         <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
           <label className="block">
-            <span className="text-xs font-medium text-cloudera-slate">What to send</span>
+            <span className="text-xs font-medium text-cloudera-slate">{t('roadmap.dataAsk.what')}</span>
             <input
               value={dataAsk?.ask ?? ''}
               onChange={(e) => setDataAsk('ask', e.target.value)}
-              placeholder="e.g. 6 months of Jira tickets with resolution notes; SOPs from Confluence"
+              placeholder={t('roadmap.dataAsk.what.placeholder')}
               className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-medium text-cloudera-slate">Owner</span>
+            <span className="text-xs font-medium text-cloudera-slate">{t('roadmap.dataAsk.owner')}</span>
             <input
               value={dataAsk?.owner ?? ''}
               onChange={(e) => setDataAsk('owner', e.target.value)}
-              placeholder="Name / role"
+              placeholder={t('roadmap.dataAsk.owner.placeholder')}
               className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange sm:w-40"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-medium text-cloudera-slate">By when</span>
+            <span className="text-xs font-medium text-cloudera-slate">{t('roadmap.dataAsk.by')}</span>
             <input
               value={dataAsk?.due ?? ''}
               onChange={(e) => setDataAsk('due', e.target.value)}
-              placeholder="2 weeks"
+              placeholder={t('roadmap.dataAsk.by.placeholder')}
               className="mt-1 w-full rounded-standard border border-surface-border bg-white px-3 py-2 text-sm outline-none focus:border-cloudera-orange sm:w-36"
             />
           </label>

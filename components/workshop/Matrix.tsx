@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { Plus, Sparkles, Loader2 } from 'lucide-react';
 import type { WorkshopUseCase } from '@/lib/workshop';
+import { useT } from '@/lib/i18n/locale';
 
 interface Coords {
   value: number;
@@ -19,6 +20,7 @@ interface Props {
 
 // Value × Feasibility 2×2. x = feasibility (0 difficult → 1 easy), y = value (0 low → 1 high).
 export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onAssist, onAddUseCase }: Props) {
+  const t = useT();
   const boardRef = useRef<HTMLDivElement>(null);
   const [dragId, setDragId] = useState<string | null>(null);
   const [drag, setDrag] = useState<Coords | null>(null); // live position of the chip being dragged
@@ -55,13 +57,13 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
                 autoFocus
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                placeholder="Use case name (e.g. Model-pull automation)"
+                placeholder={t('live.name.placeholder')}
                 className="w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
               />
               <textarea
                 value={newCtx}
                 onChange={(e) => setNewCtx(e.target.value)}
-                placeholder="Notes / context from the room: the problem, current steps, data, who's involved…"
+                placeholder={t('live.notes.placeholder')}
                 className="mt-2 min-h-[64px] w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
               />
               <div className="mt-2 flex gap-2">
@@ -75,10 +77,10 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
                   }}
                   className="rounded-standard bg-cloudera-navy px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
                 >
-                  Add
+                  {t('common.addPlain')}
                 </button>
                 <button onClick={() => setAdding(false)} className="rounded-standard px-3 py-2 text-sm text-cloudera-slate">
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
             </div>
@@ -87,11 +89,11 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
               onClick={() => setAdding(true)}
               className="inline-flex items-center gap-1 rounded-standard border border-dashed border-cloudera-slate px-3 py-1.5 text-sm text-cloudera-navy hover:border-cloudera-orange hover:text-cloudera-orange"
             >
-              <Plus size={15} /> Add use case (live)
+              <Plus size={15} /> {t('live.addUseCase')}
             </button>
           )}
         </div>
-        <div className="mb-1 text-center text-sm font-semibold text-cloudera-slate">VALUE ↑</div>
+        <div className="mb-1 text-center text-sm font-semibold text-cloudera-slate">{t('matrix.valueUp')}</div>
         <div
           ref={boardRef}
           onPointerMove={(e) => dragId && setDrag(coordsFromEvent(e))}
@@ -103,10 +105,10 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
           className="relative aspect-square w-full select-none rounded-large border border-surface-border bg-white shadow-card"
         >
           <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
-            <Quadrant className="border-b border-r" title="High value, challenging" tint="bg-amber-50" />
-            <Quadrant className="border-b" title="Quick wins" tint="bg-emerald-50" />
-            <Quadrant className="border-r" title="Low value & difficult" tint="bg-rose-50" />
-            <Quadrant title="Low value, easy" tint="bg-sky-50" />
+            <Quadrant className="border-b border-r" title={t('matrix.quadrant.highValueChallenging')} tint="bg-amber-50" />
+            <Quadrant className="border-b" title={t('matrix.quadrant.quickWins')} tint="bg-emerald-50" />
+            <Quadrant className="border-r" title={t('matrix.quadrant.lowValueDifficult')} tint="bg-rose-50" />
+            <Quadrant title={t('matrix.quadrant.lowValueEasy')} tint="bg-sky-50" />
           </div>
 
           {useCases.map((uc) => {
@@ -132,9 +134,9 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
           })}
         </div>
         <div className="mt-1 flex justify-between text-sm font-semibold text-cloudera-slate">
-          <span>← DIFFICULT</span>
-          <span>FEASIBILITY</span>
-          <span>EASY →</span>
+          <span>{t('matrix.difficult')}</span>
+          <span>{t('matrix.feasibility')}</span>
+          <span>{t('matrix.easy')}</span>
         </div>
       </div>
 
@@ -144,14 +146,14 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
             <h3 className="font-semibold">{sel.name}</h3>
             {sel.rationale && <p className="mt-1 text-sm text-cloudera-slate">{sel.rationale}</p>}
             <dl className="mt-3 space-y-1 text-sm">
-              <Row k="Value" v={`${Math.round(sel.matrix.value * 100)}%`} />
-              <Row k="Feasibility" v={`${Math.round(sel.matrix.feasibility * 100)}%`} />
+              <Row k={t('matrix.row.value')} v={`${Math.round(sel.matrix.value * 100)}%`} />
+              <Row k={t('matrix.row.feasibility')} v={`${Math.round(sel.matrix.feasibility * 100)}%`} />
             </dl>
-            <label className="mt-4 block text-sm font-medium">Re-score with a new input from the room</label>
+            <label className="mt-4 block text-sm font-medium">{t('matrix.rescore.label')}</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g. IT confirmed the data is not actually available yet"
+              placeholder={t('matrix.rescore.placeholder')}
               className="mt-2 min-h-[72px] w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
             />
             <button
@@ -167,11 +169,11 @@ export default function Matrix({ useCases, focusId, onFocus, onCommitMatrix, onA
               }}
               className="mt-2 inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
-              {busy ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />} Re-score
+              {busy ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />} {t('matrix.rescore.button')}
             </button>
           </>
         ) : (
-          <p className="text-sm text-cloudera-slate">Select a chip to see its scores and re-score it with live input.</p>
+          <p className="text-sm text-cloudera-slate">{t('matrix.selectHint')}</p>
         )}
       </div>
     </div>

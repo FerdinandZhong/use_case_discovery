@@ -9,6 +9,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { ArrowRight, Check, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { deckSections, type Question } from '@/lib/questionnaire';
 import { useResponseDraft } from '@/lib/useResponseDraft';
+import { useLocale, useT } from '@/lib/i18n/locale';
+import { localizeSection } from '@/lib/i18n/questionnaire-zh';
+import LanguageToggle from '@/components/LanguageToggle';
 
 interface Props {
   slug: string;
@@ -18,7 +21,9 @@ interface Props {
 export default function DeckForm({ slug, displayName }: Props) {
   const { answers, setAnswers, save, submit, saveState, submitted, loading, error } =
     useResponseDraft(slug);
-  const sections = deckSections();
+  const t = useT();
+  const { locale } = useLocale();
+  const sections = deckSections().map((s) => localizeSection(s, locale));
   // slide 0 = intro, 1..N = sections, N+1 = review/submit
   const total = sections.length + 2;
   const [slide, setSlide] = useState(0);
@@ -69,10 +74,8 @@ export default function DeckForm({ slug, displayName }: Props) {
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-cloudera-orange text-white">
               <Check size={32} />
             </div>
-            <h2 className="mt-6 text-3xl font-semibold text-white">Captured — thank you!</h2>
-            <p className="mt-3 text-white/70">
-              These notes flow straight into the Cloudera discovery workshop.
-            </p>
+            <h2 className="mt-6 text-3xl font-semibold text-white">{t('deck.done.title')}</h2>
+            <p className="mt-3 text-white/70">{t('deck.done.body')}</p>
           </div>
         </div>
       </Shell>
@@ -84,19 +87,16 @@ export default function DeckForm({ slug, displayName }: Props) {
     return (
       <Shell displayName={displayName}>
         <div className="flex flex-1 flex-col justify-center">
-          <p className="text-cloudera-orange font-semibold tracking-widest text-sm">AI USE CASE DISCOVERY</p>
+          <p className="text-cloudera-orange font-semibold tracking-widest text-sm">{t('deck.eyebrow')}</p>
           <h1 className="mt-4 text-5xl font-semibold leading-tight text-white">
-            Let’s map where AI can help {displayName}.
+            {t('deck.intro.title', { name: displayName })}
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-white/70">
-            A few quick topics — your challenges, your platform and tools, and how ready your data
-            is. No forms; we’ll capture it together as we talk.
-          </p>
+          <p className="mt-5 max-w-2xl text-lg text-white/70">{t('deck.intro.body')}</p>
           <button
             onClick={() => go(1)}
             className="mt-10 inline-flex w-fit items-center gap-2 rounded-standard bg-cloudera-orange px-6 py-3 text-lg font-medium text-white hover:opacity-90"
           >
-            Start <ArrowRight size={20} />
+            {t('deck.start')} <ArrowRight size={20} />
           </button>
         </div>
         <Footer slide={slide} total={total} onBack={() => go(-1)} onNext={() => go(1)} saveState={saveState} />
@@ -109,8 +109,8 @@ export default function DeckForm({ slug, displayName }: Props) {
     return (
       <Shell displayName={displayName}>
         <div className="flex-1">
-          <h2 className="text-3xl font-semibold text-white">Quick recap</h2>
-          <p className="mt-2 text-white/70">Confirm with the customer, then submit.</p>
+          <h2 className="text-3xl font-semibold text-white">{t('deck.recap.title')}</h2>
+          <p className="mt-2 text-white/70">{t('deck.recap.subtitle')}</p>
           <div className="mt-8 space-y-6">
             {sections.map((s) => (
               <div key={s.id} className="rounded-large border border-white/15 bg-white/5 p-5">
@@ -130,13 +130,13 @@ export default function DeckForm({ slug, displayName }: Props) {
         </div>
         <div className="mt-8 flex items-center justify-between border-t border-white/15 pt-6">
           <button onClick={() => go(-1)} className="inline-flex items-center gap-1 rounded-standard px-4 py-2 text-white/80 hover:text-white">
-            <ChevronLeft size={18} /> Back
+            <ChevronLeft size={18} /> {t('common.back')}
           </button>
           <button
             onClick={() => void submit()}
             className="inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-6 py-3 text-lg font-medium text-white hover:opacity-90"
           >
-            Submit <Check size={20} />
+            {t('common.submit')} <Check size={20} />
           </button>
         </div>
       </Shell>
@@ -163,11 +163,11 @@ export default function DeckForm({ slug, displayName }: Props) {
         ))}
         {/* one short optional notes box per slide */}
         <div className="mt-10">
-          <label className="text-sm text-white/50">Notes (optional)</label>
+          <label className="text-sm text-white/50">{t('deck.notes.label')}</label>
           <input
             value={(sa.deck_note as string) ?? ''}
             onChange={(e) => setValue(section.id, 'deck_note', e.target.value)}
-            placeholder="Anything the customer said worth keeping…"
+            placeholder={t('deck.notes.placeholder')}
             className="mt-2 w-full rounded-standard border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 outline-none focus:border-cloudera-orange"
           />
         </div>
@@ -264,12 +264,16 @@ function DeckControl({
 // ---------- chrome ----------
 
 function Shell({ displayName, children }: { displayName: string; children: React.ReactNode }) {
+  const t = useT();
   return (
     <main className="flex min-h-screen flex-col bg-cloudera-navy">
       <header className="border-b border-white/10">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between px-8 py-5">
           <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
-          <div className="text-sm text-white/60">Discovery · {displayName}</div>
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-white/60">{t('deck.header')} · {displayName}</div>
+            <LanguageToggle tone="dark" />
+          </div>
         </div>
       </header>
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-8 py-10">{children}</div>
@@ -290,6 +294,7 @@ function Footer({
   onNext: () => void;
   saveState: string;
 }) {
+  const t = useT();
   return (
     <div className="mt-10 flex items-center justify-between border-t border-white/15 pt-6">
       <button
@@ -297,7 +302,7 @@ function Footer({
         disabled={slide === 0}
         className="inline-flex items-center gap-1 rounded-standard px-4 py-2 text-white/80 hover:text-white disabled:opacity-30"
       >
-        <ChevronLeft size={18} /> Back
+        <ChevronLeft size={18} /> {t('common.back')}
       </button>
       <div className="flex items-center gap-2">
         {Array.from({ length: total }).map((_, i) => (
@@ -311,7 +316,7 @@ function Footer({
         onClick={onNext}
         className="inline-flex items-center gap-1 rounded-standard bg-white/10 px-5 py-2.5 font-medium text-white hover:bg-white/20"
       >
-        Next <ChevronRight size={18} />
+        {t('common.next')} <ChevronRight size={18} />
       </button>
     </div>
   );

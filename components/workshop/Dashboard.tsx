@@ -3,18 +3,21 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import type { Aggregate, Bucket } from '@/lib/aggregate';
 import type { SessionSignals, Strategy } from '@/lib/workshop';
-import { QUESTIONNAIRE, optionLabel, Question } from '@/lib/questionnaire';
+import { QUESTIONNAIRE, Question } from '@/lib/questionnaire';
+import { useLocale, useT } from '@/lib/i18n/locale';
+import { localizedOptionLabel } from '@/lib/i18n/questionnaire-zh';
 
 const NAVY = '#1a1a4e';
 const ORANGE = '#EA2A0C';
 
 function ChartCard({ title, data, color = NAVY }: { title: string; data: Bucket[]; color?: string }) {
+  const t = useT();
   const rows = data.filter((d) => d.count > 0);
   return (
     <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
       <h3 className="font-semibold">{title}</h3>
       {rows.length === 0 ? (
-        <p className="mt-6 text-sm text-cloudera-slate">No data yet.</p>
+        <p className="mt-6 text-sm text-cloudera-slate">{t('dash.noData')}</p>
       ) : (
         <div className="mt-3" style={{ height: Math.max(120, rows.length * 38) }}>
           <ResponsiveContainer width="100%" height="100%">
@@ -53,20 +56,23 @@ function SignalCard({
   selected: string[] | undefined; // facilitator override (undefined = not yet edited)
   onChange: (next: string[]) => void;
 }) {
+  const t = useT();
+  const { locale } = useLocale();
   const q = ucQuestion(questionId);
   const opts = q?.options ?? [];
-  // "on" = explicit override includes it, or (no override yet) survey has it
   const current = selected ?? surveyKeys;
   const isOn = (v: string) => current.includes(v);
   function toggle(v: string) {
-    const base = selected ?? surveyKeys; // first edit seeds from survey
+    const base = selected ?? surveyKeys;
     onChange(isOn(v) ? base.filter((x) => x !== v) : [...base, v]);
   }
   return (
     <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">{title}</h3>
-        <span className="text-xs text-cloudera-slate">{selected ? 'edited' : surveyKeys.length ? 'from survey' : 'tap to set'}</span>
+        <span className="text-xs text-cloudera-slate">
+          {selected ? t('dash.signal.edited') : surveyKeys.length ? t('dash.signal.fromSurvey') : t('dash.signal.tapToSet')}
+        </span>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {opts.map((o) => (
@@ -79,7 +85,7 @@ function SignalCard({
                 : 'border-surface-border bg-white text-cloudera-navy hover:border-cloudera-orange'
             }`}
           >
-            {optionLabel(q as Question, o.value)}
+            {localizedOptionLabel(q as Question, o.value, locale)}
           </button>
         ))}
       </div>
@@ -89,26 +95,27 @@ function SignalCard({
 
 /** Phase-01 North Star capture — free text, seeded empty; guides the AI + export. */
 function StrategyCard({ strategy, onChange }: { strategy?: Strategy; onChange: (s: Strategy) => void }) {
+  const t = useT();
   const s = strategy ?? {};
   const set = (k: keyof Strategy, v: string) => onChange({ ...s, [k]: v });
   const edited = !!(s.northStar || s.sponsor || s.valueDrivers || s.guardrails);
   return (
     <div className="rounded-large border border-surface-border bg-white p-5 shadow-card">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">Strategy &amp; alignment — the North Star</h3>
-        <span className="text-xs text-cloudera-slate">{edited ? 'edited' : 'set before mining problems'}</span>
+        <h3 className="font-semibold">{t('dash.strategy.title')}</h3>
+        <span className="text-xs text-cloudera-slate">{edited ? t('dash.signal.edited') : t('dash.strategy.badge.set')}</span>
       </div>
       <textarea
         value={s.northStar ?? ''}
         onChange={(e) => set('northStar', e.target.value)}
         rows={2}
-        placeholder="North Star — the sponsor's one-line vision / desired outcome (e.g. “Cut model-pull lead time from 2 weeks to 1 day”)"
+        placeholder={t('dash.strategy.northStar.placeholder')}
         className="mt-3 w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
       />
       <div className="mt-3 grid gap-3 sm:grid-cols-3">
-        <Field label="Sponsor" value={s.sponsor} onChange={(v) => set('sponsor', v)} placeholder="Name / role" />
-        <Field label="Value drivers" value={s.valueDrivers} onChange={(v) => set('valueDrivers', v)} placeholder="Cost, velocity, revenue, risk…" />
-        <Field label="Risk guardrails" value={s.guardrails} onChange={(v) => set('guardrails', v)} placeholder="Compliance, accuracy bar, non-negotiables" />
+        <Field label={t('dash.strategy.sponsor')} value={s.sponsor} onChange={(v) => set('sponsor', v)} placeholder={t('dash.strategy.sponsor.placeholder')} />
+        <Field label={t('dash.strategy.valueDrivers')} value={s.valueDrivers} onChange={(v) => set('valueDrivers', v)} placeholder={t('dash.strategy.valueDrivers.placeholder')} />
+        <Field label={t('dash.strategy.guardrails')} value={s.guardrails} onChange={(v) => set('guardrails', v)} placeholder={t('dash.strategy.guardrails.placeholder')} />
       </div>
     </div>
   );
@@ -141,6 +148,7 @@ export default function Dashboard({
   strategy?: Strategy;
   onEditStrategy: (s: Strategy) => void;
 }) {
+  const t = useT();
   const keysOf = (b: Bucket[]) => b.filter((x) => x.count > 0).map((x) => x.key);
   return (
     <div>
@@ -148,47 +156,44 @@ export default function Dashboard({
       <StrategyCard strategy={strategy} onChange={onEditStrategy} />
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Stat label="Respondents" value={agg.respondentCount} />
-        <Stat label="Candidate use cases" value={agg.useCaseCount} />
-        <Stat label="Distinct value drivers" value={agg.valueDrivers.filter((b) => b.count).length} />
-        <Stat label="Systems in scope" value={(signals?.systems ?? keysOf(agg.ucSystems)).length} />
+        <Stat label={t('dash.stat.respondents')} value={agg.respondentCount} />
+        <Stat label={t('dash.stat.candidateUseCases')} value={agg.useCaseCount} />
+        <Stat label={t('dash.stat.valueDrivers')} value={agg.valueDrivers.filter((b) => b.count).length} />
+        <Stat label={t('dash.stat.systemsInScope')} value={(signals?.systems ?? keysOf(agg.ucSystems)).length} />
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Primary value drivers" data={agg.valueDrivers} color={ORANGE} />
-        <ChartCard title="Biggest blockers" data={agg.bottlenecks} />
-        <ChartCard title="Current platform" data={agg.platforms} />
-        <ChartCard title="Tools in use" data={agg.tools} />
-        <ChartCard title="Where the data lives" data={agg.dataFormats} />
-        <ChartCard title="Data trust (1–5)" data={agg.dataQuality} color={ORANGE} />
+        <ChartCard title={t('dash.chart.valueDrivers')} data={agg.valueDrivers} color={ORANGE} />
+        <ChartCard title={t('dash.chart.blockers')} data={agg.bottlenecks} />
+        <ChartCard title={t('dash.chart.platform')} data={agg.platforms} />
+        <ChartCard title={t('dash.chart.tools')} data={agg.tools} />
+        <ChartCard title={t('dash.chart.dataFormats')} data={agg.dataFormats} />
+        <ChartCard title={t('dash.chart.dataTrust')} data={agg.dataQuality} color={ORANGE} />
         {/* Editable: often skipped in the survey — set them live; they also guide the AI canvas. */}
         <SignalCard
-          title="Solution patterns wanted"
+          title={t('dash.signal.patterns')}
           questionId="uc_pattern"
           surveyKeys={keysOf(agg.ucPatterns)}
           selected={signals?.patterns}
           onChange={(patterns) => onEditSignals({ ...signals, patterns })}
         />
         <SignalCard
-          title="Systems to integrate"
+          title={t('dash.signal.systems')}
           questionId="uc_systems"
           surveyKeys={keysOf(agg.ucSystems)}
           selected={signals?.systems}
           onChange={(systems) => onEditSignals({ ...signals, systems })}
         />
         <SignalCard
-          title="Human-in-the-loop expectation"
+          title={t('dash.signal.hitl')}
           questionId="uc_hitl"
           surveyKeys={keysOf(agg.ucHitl)}
           selected={signals?.hitl}
           onChange={(hitl) => onEditSignals({ ...signals, hitl })}
         />
-        <ChartCard title="Risk tolerance" data={agg.riskTolerance} color={ORANGE} />
+        <ChartCard title={t('dash.chart.riskTolerance')} data={agg.riskTolerance} color={ORANGE} />
       </div>
-      <p className="mt-3 text-sm text-cloudera-slate">
-        The three editable cards let you capture solution pattern, systems, and human-in-the-loop live when the
-        survey didn’t — they also guide the AI when you generate or re-draft the canvas.
-      </p>
+      <p className="mt-3 text-sm text-cloudera-slate">{t('dash.footer')}</p>
     </div>
   );
 }

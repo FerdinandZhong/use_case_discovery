@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { Loader2, Plus, Sparkles, Trash2 } from 'lucide-react';
 import type { WorkshopUseCase } from '@/lib/workshop';
-import { QUESTIONNAIRE, optionLabel, Question } from '@/lib/questionnaire';
+import { QUESTIONNAIRE, Question } from '@/lib/questionnaire';
+import { useLocale, useT } from '@/lib/i18n/locale';
+import { localizedOptionLabel } from '@/lib/i18n/questionnaire-zh';
 
 interface Props {
   useCases: WorkshopUseCase[];
@@ -20,6 +22,7 @@ const ucQ = (id: string): Question | undefined => UC_SECTION?.questions.find((q)
 
 /** Multi-select chip row. */
 function MultiChips({ qid, values, onChange }: { qid: string; values: string[]; onChange: (v: string[]) => void }) {
+  const { locale } = useLocale();
   const q = ucQ(qid);
   const on = (v: string) => values.includes(v);
   return (
@@ -34,7 +37,7 @@ function MultiChips({ qid, values, onChange }: { qid: string; values: string[]; 
               : 'border-surface-border bg-white text-cloudera-navy hover:border-cloudera-orange'
           }`}
         >
-          {optionLabel(q as Question, o.value)}
+          {localizedOptionLabel(q as Question, o.value, locale)}
         </button>
       ))}
     </div>
@@ -43,6 +46,7 @@ function MultiChips({ qid, values, onChange }: { qid: string; values: string[]; 
 
 /** Single-select chip row (click again to clear). */
 function SingleChips({ qid, value, onChange }: { qid: string; value?: string; onChange: (v: string | undefined) => void }) {
+  const { locale } = useLocale();
   const q = ucQ(qid);
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -56,7 +60,7 @@ function SingleChips({ qid, value, onChange }: { qid: string; value?: string; on
               : 'border-surface-border bg-white text-cloudera-navy hover:border-cloudera-orange'
           }`}
         >
-          {optionLabel(q as Question, o.value)}
+          {localizedOptionLabel(q as Question, o.value, locale)}
         </button>
       ))}
     </div>
@@ -73,6 +77,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function AddForm({ onAdd }: { onAdd: (name: string, ctx: string) => void }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [ctx, setCtx] = useState('');
@@ -82,7 +87,7 @@ function AddForm({ onAdd }: { onAdd: (name: string, ctx: string) => void }) {
         onClick={() => setOpen(true)}
         className="inline-flex items-center gap-1 rounded-standard border border-dashed border-cloudera-slate px-3 py-1.5 text-sm text-cloudera-navy hover:border-cloudera-orange hover:text-cloudera-orange"
       >
-        <Plus size={15} /> Add use case (live)
+        <Plus size={15} /> {t('live.addUseCase')}
       </button>
     );
   return (
@@ -91,13 +96,13 @@ function AddForm({ onAdd }: { onAdd: (name: string, ctx: string) => void }) {
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Use case name (e.g. Agentic AI-guided auto-retraining)"
+        placeholder={t('uc.addForm.name.placeholder')}
         className="w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
       />
       <textarea
         value={ctx}
         onChange={(e) => setCtx(e.target.value)}
-        placeholder="Current process end-to-end: the steps, handoffs, data, and who does each step."
+        placeholder={t('uc.addForm.ctx.placeholder')}
         className="mt-2 min-h-[64px] w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
       />
       <div className="mt-2 flex gap-2">
@@ -111,10 +116,10 @@ function AddForm({ onAdd }: { onAdd: (name: string, ctx: string) => void }) {
           }}
           className="rounded-standard bg-cloudera-navy px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
-          Add
+          {t('common.addPlain')}
         </button>
         <button onClick={() => setOpen(false)} className="rounded-standard px-3 py-2 text-sm text-cloudera-slate">
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </div>
@@ -130,6 +135,7 @@ export default function UseCases({
   onAddUseCase,
   onScore,
 }: Props) {
+  const t = useT();
   const [busy, setBusy] = useState<string | null>(null);
 
   async function score(id: string) {
@@ -143,14 +149,11 @@ export default function UseCases({
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-cloudera-slate">
-        One card per use case — refine the process and tag the solution pattern, systems, and human-in-the-loop.
-        These details ground the AI when you score value &amp; feasibility and draft the canvas.
-      </p>
+      <p className="text-sm text-cloudera-slate">{t('uc.intro')}</p>
 
       {useCases.length === 0 && (
         <div className="rounded-large border border-dashed border-cloudera-slate bg-white p-6 text-center text-sm text-cloudera-slate">
-          No use cases yet — add one live, or <b>Generate pack</b> from survey data.
+          {t('uc.empty')}
         </div>
       )}
 
@@ -172,14 +175,14 @@ export default function UseCases({
                 className="flex-1 rounded-standard border border-transparent px-2 py-1 text-lg font-semibold text-cloudera-navy outline-none hover:border-surface-border focus:border-cloudera-orange"
               />
               <span className="mt-1.5 rounded-pill bg-surface-light px-2 py-0.5 text-[10px] font-bold uppercase text-cloudera-slate">
-                {uc.source === 'survey' ? 'survey' : 'live'}
+                {uc.source === 'survey' ? t('uc.badge.survey') : t('uc.badge.live')}
               </span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDeleteUseCase(uc.id);
                 }}
-                title="Delete use case"
+                title={t('uc.delete')}
                 className="mt-1 rounded-standard p-1.5 text-cloudera-slate hover:bg-rose-50 hover:text-cloudera-orange"
               >
                 <Trash2 size={16} />
@@ -187,23 +190,23 @@ export default function UseCases({
             </div>
 
             <div className="mt-3 grid gap-4 lg:grid-cols-2" onClick={(e) => e.stopPropagation()}>
-              <Field label="Current process / details">
+              <Field label={t('uc.field.process')}>
                 <textarea
                   value={uc.context ?? ''}
                   onChange={(e) => onEditUseCase(uc.id, { context: e.target.value })}
-                  placeholder="Steps end-to-end, handoffs, approvals, data, who does what."
+                  placeholder={t('uc.field.process.placeholder')}
                   className="min-h-[120px] w-full rounded-standard border border-surface-border px-3 py-2 text-sm outline-none focus:border-cloudera-orange"
                 />
               </Field>
 
               <div className="space-y-3">
-                <Field label="Solution pattern">
+                <Field label={t('uc.field.pattern')}>
                   <MultiChips qid="uc_pattern" values={uc.pattern ?? []} onChange={(v) => onEditUseCase(uc.id, { pattern: v })} />
                 </Field>
-                <Field label="Systems to touch">
+                <Field label={t('uc.field.systems')}>
                   <MultiChips qid="uc_systems" values={uc.systems ?? []} onChange={(v) => onEditUseCase(uc.id, { systems: v })} />
                 </Field>
-                <Field label="Human-in-the-loop">
+                <Field label={t('uc.field.hitl')}>
                   <SingleChips qid="uc_hitl" value={uc.hitl} onChange={(v) => onEditUseCase(uc.id, { hitl: v })} />
                 </Field>
               </div>
@@ -215,14 +218,14 @@ export default function UseCases({
                 disabled={busy !== null}
                 className="inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
               >
-                {busy === uc.id ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />} Score value &amp; feasibility
+                {busy === uc.id ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />} {t('uc.score')}
               </button>
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-cloudera-slate">
-                  Value <b className="text-cloudera-navy">{Math.round(uc.matrix.value * 100)}%</b>
+                  {t('uc.value')} <b className="text-cloudera-navy">{Math.round(uc.matrix.value * 100)}%</b>
                 </span>
                 <span className="text-cloudera-slate">
-                  Feasibility <b className="text-cloudera-navy">{Math.round(uc.matrix.feasibility * 100)}%</b>
+                  {t('uc.feasibility')} <b className="text-cloudera-navy">{Math.round(uc.matrix.feasibility * 100)}%</b>
                 </span>
               </div>
               {uc.rationale && <p className="text-sm italic text-cloudera-slate">“{uc.rationale}”</p>}

@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { Check, ChevronLeft, ChevronRight, Loader2, Plus, Trash2 } from 'lucide-react';
 import type { Questionnaire, Question, Section } from '@/lib/questionnaire';
 import { useResponseDraft } from '@/lib/useResponseDraft';
+import { useLocale, useT } from '@/lib/i18n/locale';
+import { localizeSection } from '@/lib/i18n/questionnaire-zh';
+import LanguageToggle from '@/components/LanguageToggle';
 
 interface Props {
   slug: string;
@@ -15,6 +18,8 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
   const { token, answers, setAnswers, save, submit, saveState, submitted, loading, error } =
     useResponseDraft(slug);
   const [step, setStep] = useState(0);
+  const t = useT();
+  const { locale } = useLocale();
 
   const sections = questionnaire.sections;
 
@@ -83,7 +88,7 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
       <Shell displayName={displayName}>
         <div className="grid place-items-center py-24 text-cloudera-slate">
           <Loader2 className="animate-spin" />
-          <p className="mt-3">Loading your survey…</p>
+          <p className="mt-3">{t('survey.loading')}</p>
         </div>
       </Shell>
     );
@@ -104,17 +109,14 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
           <div className="grid h-14 w-14 place-items-center rounded-full bg-cloudera-orange text-white">
             <Check size={28} />
           </div>
-          <h2 className="mt-5 text-2xl font-semibold">Thank you!</h2>
-          <p className="mt-2 max-w-md text-cloudera-slate">
-            Your responses have been recorded. Your Cloudera team will use them to shape the
-            discovery workshop. You can close this tab.
-          </p>
+          <h2 className="mt-5 text-2xl font-semibold">{t('survey.thankyou.title')}</h2>
+          <p className="mt-2 max-w-md text-cloudera-slate">{t('survey.thankyou.body')}</p>
         </div>
       </Shell>
     );
   }
 
-  const section = sections[step];
+  const section = localizeSection(sections[step], locale);
   const progress = Math.round(((step + 1) / sections.length) * 100);
 
   return (
@@ -122,9 +124,7 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
       {/* progress */}
       <div className="mb-8">
         <div className="flex items-center justify-between text-sm text-cloudera-slate">
-          <span>
-            Step {step + 1} of {sections.length}
-          </span>
+          <span>{t('survey.step', { n: step + 1, m: sections.length })}</span>
           <SaveBadge state={saveState} />
         </div>
         <div className="mt-2 h-2 w-full overflow-hidden rounded-pill bg-surface-border">
@@ -166,7 +166,7 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
           disabled={step === 0}
           className="inline-flex items-center gap-1 rounded-standard px-4 py-2 text-cloudera-navy disabled:opacity-30"
         >
-          <ChevronLeft size={18} /> Back
+          <ChevronLeft size={18} /> {t('common.back')}
         </button>
 
         {step < sections.length - 1 ? (
@@ -175,7 +175,7 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
             disabled={requiredMissing(section)}
             className="inline-flex items-center gap-1 rounded-standard bg-cloudera-navy px-5 py-2.5 font-medium text-white disabled:opacity-40"
           >
-            Next <ChevronRight size={18} />
+            {t('common.next')} <ChevronRight size={18} />
           </button>
         ) : (
           <button
@@ -183,7 +183,7 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
             disabled={requiredMissing(section)}
             className="inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-5 py-2.5 font-medium text-white disabled:opacity-40"
           >
-            Submit <Check size={18} />
+            {t('common.submit')} <Check size={18} />
           </button>
         )}
       </div>
@@ -195,12 +195,16 @@ export default function SurveyForm({ slug, displayName, questionnaire }: Props) 
 // ---------- sub-components ----------
 
 function Shell({ displayName, children }: { displayName: string; children: React.ReactNode }) {
+  const t = useT();
   return (
     <main className="min-h-screen">
       <header className="bg-cloudera-navy text-white">
-        <div className="mx-auto max-w-2xl px-6 py-8">
-          <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
-          <h1 className="mt-1 text-xl font-semibold">AI Use Case Discovery · {displayName}</h1>
+        <div className="mx-auto flex max-w-2xl items-start justify-between px-6 py-8">
+          <div>
+            <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
+            <h1 className="mt-1 text-xl font-semibold">{t('brand.name')} · {displayName}</h1>
+          </div>
+          <LanguageToggle tone="dark" />
         </div>
       </header>
       <div className="mx-auto max-w-2xl px-6 py-10">{children}</div>
@@ -209,19 +213,20 @@ function Shell({ displayName, children }: { displayName: string; children: React
 }
 
 function SaveBadge({ state }: { state: 'idle' | 'saving' | 'saved' | 'error' }) {
+  const t = useT();
   if (state === 'saving')
     return (
       <span className="inline-flex items-center gap-1 text-cloudera-slate">
-        <Loader2 size={14} className="animate-spin" /> Saving…
+        <Loader2 size={14} className="animate-spin" /> {t('survey.save.saving')}
       </span>
     );
   if (state === 'saved')
     return (
       <span className="inline-flex items-center gap-1 text-green-600">
-        <Check size={14} /> Saved
+        <Check size={14} /> {t('survey.save.saved')}
       </span>
     );
-  if (state === 'error') return <span className="text-cloudera-orange">Save failed — retrying</span>;
+  if (state === 'error') return <span className="text-cloudera-orange">{t('survey.save.error')}</span>;
   return <span />;
 }
 
@@ -368,25 +373,24 @@ function RepeatableSection({
   onAdd: () => void;
   onRemove: (index: number) => void;
 }) {
+  const t = useT();
+  const label = section.repeatLabel ?? 'item';
   return (
     <div className="space-y-6">
       {entries.length === 0 && (
-        <p className="text-sm text-cloudera-slate">
-          No {section.repeatLabel?.toLowerCase() ?? 'items'} added yet. This section is optional —
-          add one if you already have a use case in mind.
-        </p>
+        <p className="text-sm text-cloudera-slate">{t('survey.repeat.none', { label })}</p>
       )}
       {entries.map((entry, i) => (
         <div key={i} className="rounded-large border border-surface-border bg-white p-5 shadow-card">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-semibold">
-              {section.repeatLabel ?? 'Item'} {i + 1}
+              {label} {i + 1}
             </h3>
             <button
               onClick={() => onRemove(i)}
               className="inline-flex items-center gap-1 text-sm text-cloudera-slate hover:text-cloudera-orange"
             >
-              <Trash2 size={15} /> Remove
+              <Trash2 size={15} /> {t('common.remove')}
             </button>
           </div>
           <div className="space-y-6">
@@ -405,7 +409,7 @@ function RepeatableSection({
         onClick={onAdd}
         className="inline-flex items-center gap-1 rounded-standard border border-dashed border-cloudera-slate px-4 py-2 text-cloudera-navy hover:border-cloudera-orange hover:text-cloudera-orange"
       >
-        <Plus size={18} /> Add {section.repeatLabel?.toLowerCase() ?? 'item'}
+        <Plus size={18} /> {t('common.add', { label })}
       </button>
     </div>
   );

@@ -11,6 +11,8 @@ import Matrix from '@/components/workshop/Matrix';
 import Canvas from '@/components/workshop/Canvas';
 import Roadmap from '@/components/workshop/Roadmap';
 import type { WorkshopUseCase } from '@/lib/workshop';
+import { useT } from '@/lib/i18n/locale';
+import LanguageToggle from '@/components/LanguageToggle';
 
 const TOKEN_KEY = 'ucd_admin_token';
 type Tab = 'dashboard' | 'usecases' | 'matrix' | 'canvas' | 'roadmap';
@@ -21,6 +23,7 @@ const NEUTRAL = {
 };
 
 export default function WorkshopPage({ params }: { params: { slug: string } }) {
+  const tr = useT();
   const slug = params.slug;
   const [token, setToken] = useState('');
   const [authed, setAuthed] = useState(false);
@@ -170,9 +173,12 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
     return (
       <main className="min-h-screen grid place-items-center px-6">
         <div className="w-full max-w-sm">
-          <div className="text-cloudera-orange font-bold tracking-widest text-sm">CLOUDERA</div>
-          <h1 className="mt-3 text-2xl font-semibold">Workshop cockpit</h1>
-          <p className="mt-2 text-sm text-cloudera-slate">Enter the admin token to run the session for {slug}.</p>
+          <div className="flex items-center justify-between">
+            <div className="text-cloudera-orange font-bold tracking-widest text-sm">CLOUDERA</div>
+            <LanguageToggle tone="light" />
+          </div>
+          <h1 className="mt-3 text-2xl font-semibold">{tr('cockpit.gate.title')}</h1>
+          <p className="mt-2 text-sm text-cloudera-slate">{tr('cockpit.gate.help', { slug })}</p>
           <input
             type="password"
             value={token}
@@ -182,7 +188,7 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
             className="mt-4 w-full rounded-standard border border-surface-border px-3 py-2 outline-none focus:border-cloudera-orange"
           />
           <button onClick={() => load(token)} className="mt-3 w-full rounded-standard bg-cloudera-navy px-4 py-2.5 font-medium text-white">
-            {loading ? 'Checking…' : 'Enter'}
+            {loading ? tr('admin.signin.checking') : tr('cockpit.gate.enter')}
           </button>
           {error && <p className="mt-3 text-sm text-cloudera-orange">{error}</p>}
         </div>
@@ -200,20 +206,20 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
   // The storyline: the deck's phases, in order, with a "done" signal per phase.
   const order: Tab[] = ['dashboard', 'usecases', 'matrix', 'canvas', 'roadmap'];
   const tabs: { id: Tab; num: number; label: string; phase: string; done: boolean }[] = [
-    { id: 'dashboard', num: 1, label: 'Dashboard', phase: 'Why are we here', done: (agg?.respondentCount ?? 0) > 0 },
-    { id: 'usecases', num: 2, label: 'Use cases', phase: 'Mine & detail', done: useCases.length > 0 },
-    { id: 'matrix', num: 3, label: 'Prioritize', phase: 'Value × feasibility', done: useCases.some((u) => u.rationale) },
-    { id: 'canvas', num: 4, label: 'AI Canvas', phase: 'Solution ideation', done: useCases.some((u) => u.canvas) },
-    { id: 'roadmap', num: 5, label: 'Roadmap & RACI', phase: 'Roadmap & ownership', done: !!pack?.roadmap },
+    { id: 'dashboard', num: 1, label: tr('cockpit.tab.dashboard'), phase: 'Why are we here', done: (agg?.respondentCount ?? 0) > 0 },
+    { id: 'usecases', num: 2, label: tr('cockpit.tab.usecases'), phase: 'Mine & detail', done: useCases.length > 0 },
+    { id: 'matrix', num: 3, label: tr('cockpit.tab.matrix'), phase: 'Value × feasibility', done: useCases.some((u) => u.rationale) },
+    { id: 'canvas', num: 4, label: tr('cockpit.tab.canvas'), phase: 'Solution ideation', done: useCases.some((u) => u.canvas) },
+    { id: 'roadmap', num: 5, label: tr('cockpit.tab.roadmap'), phase: 'Roadmap & ownership', done: !!pack?.roadmap },
   ];
   const idx = order.indexOf(tab);
   const nextTab = order[idx + 1];
   const prevTab = order[idx - 1];
   const nextLabel: Record<Tab, string> = {
-    dashboard: 'Detail the use cases',
-    usecases: 'Prioritize by value × feasibility',
-    matrix: 'Take the top pick into the Canvas',
-    canvas: 'Build the roadmap',
+    dashboard: tr('cockpit.next.dashboard'),
+    usecases: tr('cockpit.next.usecases'),
+    matrix: tr('cockpit.next.matrix'),
+    canvas: tr('cockpit.next.canvas'),
     roadmap: '',
   };
   function goNext() {
@@ -232,23 +238,24 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
-              <h1 className="mt-1 text-2xl font-semibold">Discovery Workshop · {displayName}</h1>
+              <h1 className="mt-1 text-2xl font-semibold">{tr('cockpit.title')} · {displayName}</h1>
             </div>
             <div className="flex items-center gap-2">
+              <LanguageToggle tone="dark" />
               <button
                 onClick={generate}
                 disabled={generating}
                 className="inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
               >
                 {generating ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                {hasPack ? 'Regenerate pack' : 'Generate pack'}
+                {hasPack ? tr('cockpit.regenerate') : tr('cockpit.generate')}
               </button>
               <button
                 onClick={() => downloadLeaveBehind(displayName, pack)}
                 disabled={!hasPack}
                 className="inline-flex items-center gap-2 rounded-standard bg-white/10 px-3 py-2 text-sm hover:bg-white/20 disabled:opacity-40"
               >
-                <Download size={15} /> Export
+                <Download size={15} /> {tr('cockpit.export')}
               </button>
             </div>
           </div>
@@ -303,11 +310,11 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
 
         {/* story-so-far strip — carries the thread from the previous phase */}
         <p className="mb-5 text-sm text-cloudera-slate">
-          {tab === 'dashboard' && 'Phase 1 · Why are we here — align on the North Star before mining problems.'}
-          {tab === 'usecases' && `Phase 2 · Mine & detail — ${useCases.length} use case${useCases.length === 1 ? '' : 's'}; refine each one's process, pattern, systems, and human-in-the-loop.`}
-          {tab === 'matrix' && `Phase 3 · Prioritize — position the ${useCases.length} use case${useCases.length === 1 ? '' : 's'} by value × feasibility.`}
-          {tab === 'canvas' && `Phase 4 · Designing ${focus ? `“${focus.name}”` : 'the top pick'} — the use case carried over from Prioritize.`}
-          {tab === 'roadmap' && `Phase 5 · ${ranked.length} prioritized${focus ? ` · leading with “${focus.name}”` : ''} — lock the MVP, owners, and the data ask.`}
+          {tab === 'dashboard' && tr('cockpit.story.dashboard')}
+          {tab === 'usecases' && tr('cockpit.story.usecases', { n: useCases.length })}
+          {tab === 'matrix' && tr('cockpit.story.matrix', { n: useCases.length })}
+          {tab === 'canvas' && tr('cockpit.story.canvas', { name: focus ? `“${focus.name}”` : tr('cockpit.tab.canvas') })}
+          {tab === 'roadmap' && tr('cockpit.story.roadmap', { n: ranked.length })}
         </p>
 
         {tab === 'dashboard' &&
@@ -383,7 +390,7 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
             disabled={!prevTab}
             className="inline-flex items-center gap-1 rounded-standard px-4 py-2 text-sm text-cloudera-navy disabled:opacity-30"
           >
-            <ChevronLeft size={16} /> Back
+            <ChevronLeft size={16} /> {tr('common.back')}
           </button>
           {nextTab ? (
             <button
@@ -398,7 +405,7 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
               disabled={!hasPack}
               className="inline-flex items-center gap-2 rounded-standard bg-cloudera-orange px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40"
             >
-              <Download size={16} /> Export the leave-behind
+              <Download size={16} /> {tr('cockpit.export')}
             </button>
           )}
         </div>
