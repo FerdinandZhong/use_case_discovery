@@ -57,41 +57,57 @@ npm run dev                          # http://localhost:3000
 4. In `/admin`, download the catalog as **MD / JSON / CSV**, or run
    `npm run export-catalog <slug>` to write files into `catalog/`.
 
-## Deploy
+## Deploy on CAI Workbench
 
-Runs on **Cloudera AI (CAI) Workbench** as an Application. Pick the option that fits — the
-first is the easiest.
+Runs as a **Cloudera AI (CAI) Workbench Application**. Pick the option that fits — **Option A (AMP) is
+the one-click default**; the rest are for CI or hands-on control.
 
-### Option 1 (default): AMP — one-click from the CML catalog
-The repo ships an **AMP** (`.project-metadata.yaml`). CML builds and launches the whole thing for you.
+### Option A — AMP (one-click, recommended)
+The repo ships an **AMP** (`.project-metadata.yaml`), so CML builds and launches the whole thing for you —
+no secrets, CI, or scripts.
 
 1. In CML: **New Project → AMPs → Add from Git**, paste
    `https://github.com/FerdinandZhong/use_case_discovery`.
-2. Fill the deploy form: set **`ADMIN_TOKEN`** (required — e.g. `openssl rand -hex 24`); optionally the
-   `LLM_*` fields and `DATABASE_URL` (blank = SQLite). Click **Launch**.
-3. The AMP runs a **Build** session (`cai_integration/build_app.py`: installs Node + npm deps + builds)
-   then starts the **Application** (`cai_integration/start_app.py`, unauthenticated so external
-   respondents can reach the survey). Open the app URL when it's running.
+2. On the launch form, **fill in `ADMIN_TOKEN`** (required — e.g. `openssl rand -hex 24`). Optionally set
+   `APP_SUBDOMAIN`, the `LLM_*` fields, and `DATABASE_URL` (blank = embedded SQLite). Click **Launch**.
+3. The AMP runs a **Build** session (`cai_integration/build_app.py` → `npm install && npm run build`) then
+   starts the **Application** (`cai_integration/start_app.py`, unauthenticated so external respondents can
+   reach the survey). Open the app URL once it's running.
 
-No secrets, CI, or scripts to configure. Any ML runtime works — `ensure_node.sh` bootstraps Node 20 if
-`npm` isn't present.
+Any ML runtime works — `cai_integration/ensure_node.sh` bootstraps Node 20 into project storage if `npm`
+isn't already on PATH.
 
-### Option 2: CAI Workbench via GitHub Actions (CI)
-Push-to-deploy. Set repo secrets once, then every push to `main` runs the chain
-`git_sync → build → launch` (`.github/workflows/deploy-to-cml.yml`); a preflight fails fast if a secret
-is missing.
+### Option B — GitHub Actions (CI)
+Push-to-deploy. Set the repo secrets once; every push to `main` runs the job chain and a preflight fails
+fast if a secret is missing (`.github/workflows/deploy-to-cml.yml`).
+
+**Job chain:** `git_sync → build → launch` (each a CML Job; also runnable from the CML Jobs UI).
 ```bash
 gh secret set CML_HOST; gh secret set CML_API_KEY; gh secret set RUNTIME_IDENTIFIER
 gh secret set ADMIN_TOKEN --body "$(openssl rand -hex 24)"
 gh workflow run deploy-to-cml.yml -f subdomain=ucd-survey
 ```
 
-### Option 3: CAI Workbench manual / in-project
+### Option C — In-project launch / CAI UI (manual)
 See **`cai_integration/README.md`**. Either run the chain from the **CML Jobs UI** (run
-"Git Repository Sync" → it cascades to build → launch), or point a CML Application at
-`cai_integration/start_app.py` (New Application → set `ADMIN_TOKEN`, keep it running).
+"Git Repository Sync" → it cascades to build → launch), or create the Application by hand:
+Project → **Applications → New Application** → script `cai_integration/start_app.py`, set `ADMIN_TOKEN`,
+keep it running.
 
-### Option 4: Docker (non-CAI hosts)
+### First-run environment setup
+The build/launch tasks need internet (to fetch Node + npm packages), and the Application needs one env var:
+
+| Env var | Required | Purpose |
+| --- | --- | --- |
+| `ADMIN_TOKEN` | **yes** | Admin/facilitator secret (`process.env.ADMIN_TOKEN`) — guards `/admin` + the cockpit. The app won't start without it. **AMP prompts for it at deploy**; GitHub Actions injects it from the repo secret; or set it as an Application Environment Variable in the UI. |
+| `APP_SUBDOMAIN` | no | URL subdomain (default `ucd-survey`). |
+| `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL` | no | OpenAI-compatible endpoint for the agent pass. Blank = no AI (manual editing still works). Also settable in-app at `/admin/settings`. |
+| `DATABASE_URL` | no | Postgres URL. Blank = embedded SQLite in project storage (data stays on Cloudera). |
+
+Rotating `ADMIN_TOKEN`: a bare *restart* keeps the old env — change the value in the UI or re-run the
+deploy. Never put the token in a URL or commit it.
+
+### Docker (non-CAI hosts)
 ```bash
 docker build -t ucd-survey .
 docker run -p 8080:8080 \
@@ -100,13 +116,7 @@ docker run -p 8080:8080 \
   ucd-survey
 # → http://localhost:8080   (add -e DATABASE_URL=... to use Postgres instead)
 ```
-Deploys as-is to any container platform (ECS/Cloud Run, Render, etc.). Listens on `PORT`/`CDSW_APP_PORT` (8080).
-
-### Setting `ADMIN_TOKEN`
-The admin/facilitator secret (read server-side as `process.env.ADMIN_TOKEN`) — the app won't start without
-it. AMP prompts for it at deploy; GitHub Actions injects it from the repo secret; or set it as an
-Application **Environment Variable** in the CML UI. Rotating: a bare *restart* keeps the old env — change
-the value in the UI or re-run the deploy. Never put the token in a URL or commit it.
+Listens on `PORT`/`CDSW_APP_PORT` (8080). Deploys to any container platform (ECS/Cloud Run, Render, etc.).
 
 ## Security
 - **Transport:** terminate TLS at your host/ingress (Vercel/CML/LB do this).
