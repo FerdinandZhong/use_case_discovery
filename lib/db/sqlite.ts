@@ -16,7 +16,9 @@ function conn(): Database.Database {
   const file = resolve(process.env.SQLITE_PATH || './data/survey.db');
   mkdirSync(dirname(file), { recursive: true });
   db = new Database(file);
-  db.pragma('journal_mode = WAL');
+  // WAL needs shared memory, which NFS (CML project storage under /home/cdsw) lacks.
+  // ponytail: DELETE journal on CML storage, single-writer ceiling; use DATABASE_URL (Postgres) for concurrency.
+  db.pragma(`journal_mode = ${file.startsWith('/home/cdsw/') ? 'DELETE' : 'WAL'}`);
   db.pragma('foreign_keys = ON');
   db.pragma('busy_timeout = 5000');
   return db;

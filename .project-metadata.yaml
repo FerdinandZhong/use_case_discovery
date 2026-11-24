@@ -18,10 +18,6 @@ environment_variables:
       Shared admin/facilitator secret. Guards /admin and the workshop cockpit. Use a
       strong random value, e.g. the output of: openssl rand -hex 24
     required: true
-  APP_SUBDOMAIN:
-    default: "ucd-survey"
-    description: "URL subdomain for the Application (a-z, 0-9, hyphen)."
-    required: false
   LLM_BASE_URL:
     default: ""
     description: >-

@@ -69,10 +69,16 @@ no secrets, CI, or scripts.
 1. In CML: **New Project → AMPs → Add from Git**, paste
    `https://github.com/FerdinandZhong/use_case_discovery`.
 2. On the launch form, **fill in `ADMIN_TOKEN`** (required — e.g. `openssl rand -hex 24`). Optionally set
-   `APP_SUBDOMAIN`, the `LLM_*` fields, and `DATABASE_URL` (blank = embedded SQLite). Click **Launch**.
+   the `LLM_*` fields and `DATABASE_URL` (blank = embedded SQLite). Click **Launch**.
+   The AMP's Application subdomain is fixed at `ucd-survey`; for a second install in the same
+   workspace, change it in the Application settings after launch.
 3. The AMP runs a **Build** session (`cai_integration/build_app.py` → `npm install && npm run build`) then
    starts the **Application** (`cai_integration/start_app.py`, unauthenticated so external respondents can
    reach the survey). Open the app URL once it's running.
+
+> **Prerequisite:** unauthenticated Applications must be allowed by a workspace admin
+> (*Site Administration → Security → Allow applications to be configured with unauthenticated access*).
+> If it's off, the app sits behind Workbench SSO and external respondents can't open `/s/<slug>`.
 
 Any ML runtime works — `cai_integration/ensure_node.sh` bootstraps Node 20 into project storage if `npm`
 isn't already on PATH.
