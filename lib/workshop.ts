@@ -46,6 +46,7 @@ export interface WorkshopUseCase {
   pattern?: string[]; // uc_pattern values
   systems?: string[]; // uc_systems values
   hitl?: string; // uc_hitl value
+  aiErrors?: ('canvas' | 'kill')[]; // AI drafts that failed at generate time (cleared when Assist succeeds)
 }
 
 export interface ArchitectureComponent {
@@ -101,6 +102,9 @@ export interface WorkshopPack {
   strategy?: Strategy;
   signals?: SessionSignals;
   generatedAt?: string;
+  scoringFallback?: true; // prioritize() failed at generate time — scores are neutral placeholders
+  previous?: WorkshopPack; // snapshot taken before the last regenerate / restore (never nested)
+  previousSavedAt?: string;
 }
 
 export function emptyPack(): WorkshopPack {

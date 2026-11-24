@@ -145,10 +145,10 @@ export async function getWorkshop(surveySlug: string): Promise<WorkshopRow | nul
 export async function saveWorkshop(surveySlug: string, data: unknown, status = 'generated'): Promise<WorkshopRow> {
   conn()
     .prepare(
-      `INSERT INTO workshops (survey_slug, data, status) VALUES (?, ?, ?)
-       ON CONFLICT(survey_slug) DO UPDATE SET data = excluded.data, status = excluded.status, updated_at = datetime('now')`,
+      `INSERT INTO workshops (survey_slug, data, status, updated_at) VALUES (?, ?, ?, ?)
+       ON CONFLICT(survey_slug) DO UPDATE SET data = excluded.data, status = excluded.status, updated_at = excluded.updated_at`,
     )
-    .run(surveySlug, JSON.stringify(data ?? {}), status);
+    .run(surveySlug, JSON.stringify(data ?? {}), status, new Date().toISOString()); // JS ms-resolution (datetime('now') is 1s)
   return (await getWorkshop(surveySlug))!;
 }
 

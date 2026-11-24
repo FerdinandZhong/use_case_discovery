@@ -29,6 +29,12 @@ function useCaseSignals(uc: WorkshopUseCase): string {
   return parts.length ? `This use case's details — ${parts.join('; ')}.` : '';
 }
 
+// A successful regeneration clears the matching generate-time failure flag.
+function clearAiError(uc: WorkshopUseCase, which: 'canvas' | 'kill') {
+  uc.aiErrors = uc.aiErrors?.filter((e) => e !== which);
+  if (!uc.aiErrors?.length) delete uc.aiErrors;
+}
+
 // POST /api/workshop/[slug]/assist
 //   { type: 'rescore'|'canvas'|'kill', useCaseId, note? }  — single-item agent assist
 //   { type: 'roadmap' }                                    — rebuild the MVP backlog + RACI
@@ -71,8 +77,8 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
           feasibility: u.matrix.feasibility,
         })),
       );
-      await saveWorkshop(params.slug, pack, row?.status ?? 'generated');
-      return NextResponse.json({ pack });
+      const saved = await saveWorkshop(params.slug, pack, row?.status ?? 'generated');
+      return NextResponse.json({ pack, updatedAt: saved.updated_at });
     }
 
     const uc = pack.useCases?.find((u) => u.id === useCaseId);
@@ -94,11 +100,13 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
       }
     } else if (type === 'canvas') {
       uc.canvas = await draftCanvas(uc.name, ctx);
+      clearAiError(uc, 'canvas');
     } else if (type === 'kill') {
       uc.killIdea = await killIdea(uc.name, ctx);
+      clearAiError(uc, 'kill');
     }
-    await saveWorkshop(params.slug, pack, row?.status ?? 'generated');
-    return NextResponse.json({ useCase: uc as WorkshopUseCase });
+    const saved = await saveWorkshop(params.slug, pack, row?.status ?? 'generated');
+    return NextResponse.json({ useCase: uc as WorkshopUseCase, updatedAt: saved.updated_at });
   } catch (e: any) {
     return NextResponse.json({ error: `Assist failed: ${e.message ?? e}` }, { status: 502 });
   }

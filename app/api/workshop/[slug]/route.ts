@@ -18,6 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { slug: string
     survey,
     status: row?.status ?? 'draft',
     pack: row?.data ?? emptyPack(),
+    updatedAt: row?.updated_at ?? null,
   });
 }
 
@@ -32,6 +33,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { slug: stri
   if (!body?.pack || typeof body.pack !== 'object') {
     return NextResponse.json({ error: 'Missing pack' }, { status: 400 });
   }
+  const current = await getWorkshop(params.slug);
+  if (body.baseUpdatedAt && current && body.baseUpdatedAt !== current.updated_at) {
+    return NextResponse.json({ error: 'conflict', updatedAt: current.updated_at }, { status: 409 });
+  }
   const row = await saveWorkshop(params.slug, body.pack, body.status ?? 'generated');
-  return NextResponse.json({ status: row.status, pack: row.data });
+  return NextResponse.json({ status: row.status, pack: row.data, updatedAt: row.updated_at });
 }

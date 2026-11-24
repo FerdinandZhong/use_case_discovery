@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Download, Loader2, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Download, Loader2, RotateCcw, Sparkles } from 'lucide-react';
 import { aggregate, type Aggregate } from '@/lib/aggregate';
 import type { AiCanvas, WorkshopPack } from '@/lib/workshop';
 import Dashboard from '@/components/workshop/Dashboard';
@@ -36,6 +36,15 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
   const [focusId, setFocusId] = useState<string | null>(null); // the use case in the spotlight across tabs
   const [generating, setGenerating] = useState(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved');
+  const [conflict, setConflict] = useState(false);
+  const latest = useRef<WorkshopPack | null>(null); // newest pack awaiting save
+  const dirty = useRef(false);
+  const inFlight = useRef(false);
+  const conflicted = useRef(false);
+  const retries = useRef(0);
+  const updatedAt = useRef<string | null>(null); // server version we last saw (optimistic concurrency)
+  const flushRef = useRef<() => void>(() => {});
 
   const authHeader = useCallback(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
@@ -53,6 +62,7 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
         const w = await wRes.json();
         setDisplayName(w.survey?.display_name ?? slug);
         setPack(w.pack as WorkshopPack);
+        updatedAt.current = w.updatedAt ?? null;
         if (cRes.ok) {
           const c = await cRes.json();
           const responses = (c.responses ?? []).map((r: any) => ({ answers: r.answers ?? {}, status: 'submitted' }));
@@ -78,24 +88,70 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
     }
   }, [load]);
 
-  // persist the pack (debounced) for facilitator edits
-  const persist = useCallback(
-    (next: WorkshopPack, immediate = false) => {
-      setPack(next);
-      if (saveTimer.current) clearTimeout(saveTimer.current);
-      const doSave = () =>
-        fetch(`/api/workshop/${slug}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', ...authHeader() },
-          body: JSON.stringify({ pack: next }),
-        }).catch(() => {});
-      if (immediate) void doSave();
-      else saveTimer.current = setTimeout(doSave, 600);
-    },
-    [slug, authHeader],
-  );
+  // Autosave: debounced, serialized (one PATCH in flight), retried with backoff, version-checked.
+  function flush() {
+    if (inFlight.current || conflicted.current || !dirty.current || !latest.current) return;
+    inFlight.current = true;
+    dirty.current = false;
+    setSaveStatus('saving');
+    fetch(`/api/workshop/${slug}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...authHeader() },
+      body: JSON.stringify({ pack: latest.current, baseUpdatedAt: updatedAt.current }),
+    })
+      .then(async (res) => {
+        inFlight.current = false;
+        if (res.status === 409) {
+          conflicted.current = true;
+          dirty.current = false;
+          setConflict(true);
+          setSaveStatus('error');
+          return;
+        }
+        if (!res.ok) throw new Error(String(res.status));
+        updatedAt.current = (await res.json()).updatedAt ?? updatedAt.current;
+        retries.current = 0;
+        if (dirty.current) flushRef.current();
+        else setSaveStatus('saved');
+      })
+      .catch(() => {
+        inFlight.current = false;
+        dirty.current = true;
+        setSaveStatus('error');
+        const delay = [2000, 5000, 10000][retries.current++];
+        if (delay) saveTimer.current = setTimeout(() => flushRef.current(), delay); // then wait for manual retry
+      });
+  }
+  flushRef.current = flush;
+
+  function persist(next: WorkshopPack, immediate = false) {
+    setPack(next);
+    latest.current = next;
+    dirty.current = true;
+    if (!conflicted.current) setSaveStatus('saving');
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    if (immediate) flush();
+    else saveTimer.current = setTimeout(() => flushRef.current(), 600);
+  }
+
+  function retrySave() {
+    retries.current = 0;
+    flush();
+  }
+
+  // warn before leaving with an unsaved / failed save
+  useEffect(() => {
+    if (saveStatus === 'saved') return;
+    const h = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', h);
+    return () => window.removeEventListener('beforeunload', h);
+  }, [saveStatus]);
 
   async function generate() {
+    if ((pack?.useCases?.length ?? 0) > 0 && !window.confirm(tr('gen.confirm'))) return;
     setGenerating(true);
     setError(null);
     try {
@@ -103,6 +159,11 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Generation failed');
       setPack(data.pack as WorkshopPack);
+      updatedAt.current = data.updatedAt ?? updatedAt.current;
+      // the generated pack supersedes any pending local edit
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      dirty.current = false;
+      if (!inFlight.current) setSaveStatus('saved');
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -121,6 +182,7 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
       setError(data.error ?? 'Assist failed');
       return;
     }
+    updatedAt.current = data.updatedAt ?? updatedAt.current;
     setPack((p) =>
       p ? { ...p, useCases: p.useCases.map((u) => (u.id === id ? data.useCase : u)) } : p,
     );
@@ -165,7 +227,14 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
       setError(data.error ?? 'Rebuild failed');
       return;
     }
+    updatedAt.current = data.updatedAt ?? updatedAt.current;
     setPack(data.pack as WorkshopPack);
+  }
+
+  function restorePrevious() {
+    if (!pack?.previous || !window.confirm(tr('restore.confirm'))) return;
+    const { previous, previousSavedAt, ...cur } = pack;
+    persist({ ...previous, previous: cur, previousSavedAt: new Date().toISOString() }, true);
   }
 
   // ---- auth gate ----
@@ -239,6 +308,16 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
             <div>
               <div className="text-cloudera-orange font-bold tracking-widest text-xs">CLOUDERA</div>
               <h1 className="mt-1 text-2xl font-semibold">{tr('cockpit.title')} · {displayName}</h1>
+              <div className="mt-1 text-xs text-white/70">
+                {saveStatus === 'saved' && tr('save.saved')}
+                {saveStatus === 'saving' && tr('save.saving')}
+                {saveStatus === 'error' && !conflict && (
+                  <>
+                    <span className="text-cloudera-orange">{tr('save.error')}</span>{' '}
+                    <button onClick={retrySave} className="underline">{tr('save.retry')}</button>
+                  </>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <LanguageToggle tone="dark" />
@@ -250,6 +329,14 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
                 {generating ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                 {hasPack ? tr('cockpit.regenerate') : tr('cockpit.generate')}
               </button>
+              {pack?.previous && (
+                <button
+                  onClick={restorePrevious}
+                  className="inline-flex items-center gap-2 rounded-standard bg-white/10 px-3 py-2 text-sm hover:bg-white/20"
+                >
+                  <RotateCcw size={15} /> {tr('restore.btn')}
+                </button>
+              )}
               <button
                 onClick={() => downloadLeaveBehind(displayName, pack)}
                 disabled={!hasPack}
@@ -288,6 +375,19 @@ export default function WorkshopPage({ params }: { params: { slug: string } }) {
       </header>
 
       <div className="mx-auto max-w-6xl px-6 py-8">
+        {conflict && (
+          <p className="mb-4 rounded-standard bg-orange-50 px-3 py-2 text-sm text-cloudera-orange">
+            {tr('save.conflict')}{' '}
+            <button onClick={() => window.location.reload()} className="font-medium underline">
+              {tr('save.reload')}
+            </button>
+          </p>
+        )}
+
+        {pack?.scoringFallback && (
+          <p className="mb-4 rounded-standard bg-orange-50 px-3 py-2 text-sm text-cloudera-orange">{tr('scoring.fallback')}</p>
+        )}
+
         {error && (
           <p className="mb-4 rounded-standard bg-orange-50 px-3 py-2 text-sm text-cloudera-orange">
             {error}

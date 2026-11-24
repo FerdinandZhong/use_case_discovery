@@ -177,6 +177,11 @@ export default function UseCases({
               <span className="mt-1.5 rounded-pill bg-surface-light px-2 py-0.5 text-[10px] font-bold uppercase text-cloudera-slate">
                 {uc.source === 'survey' ? t('uc.badge.survey') : t('uc.badge.live')}
               </span>
+              {uc.aiErrors?.length ? (
+                <span className="mt-1.5 rounded-pill bg-orange-50 px-2 py-0.5 text-[10px] font-bold text-cloudera-orange">
+                  ⚠ {t('uc.aiError')}
+                </span>
+              ) : null}
               <button
                 onClick={(e) => {
                   e.stopPropagation();

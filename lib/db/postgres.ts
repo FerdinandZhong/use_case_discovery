@@ -126,17 +126,24 @@ export async function updateResponse(token: string, patch: ResponsePatch): Promi
 
 export async function getWorkshop(surveySlug: string): Promise<WorkshopRow | null> {
   const { rows } = await db().query('SELECT * FROM workshops WHERE survey_slug = $1', [surveySlug]);
-  return rows[0] ?? null; // pg parses JSONB → object automatically
+  return rows[0] ? wsRow(rows[0]) : null; // pg parses JSONB → object automatically
 }
+
+// pg returns TIMESTAMPTZ as Date; normalize to an ISO string so it compares/serializes like sqlite's.
+const wsRow = (r: any): WorkshopRow => ({
+  ...r,
+  created_at: new Date(r.created_at).toISOString(),
+  updated_at: new Date(r.updated_at).toISOString(),
+});
 
 export async function saveWorkshop(surveySlug: string, data: unknown, status = 'generated'): Promise<WorkshopRow> {
   const { rows } = await db().query(
-    `INSERT INTO workshops (survey_slug, data, status) VALUES ($1, $2::jsonb, $3)
-     ON CONFLICT (survey_slug) DO UPDATE SET data = EXCLUDED.data, status = EXCLUDED.status, updated_at = now()
+    `INSERT INTO workshops (survey_slug, data, status, updated_at) VALUES ($1, $2::jsonb, $3, $4)
+     ON CONFLICT (survey_slug) DO UPDATE SET data = EXCLUDED.data, status = EXCLUDED.status, updated_at = EXCLUDED.updated_at
      RETURNING *`,
-    [surveySlug, JSON.stringify(data ?? {}), status],
+    [surveySlug, JSON.stringify(data ?? {}), status, new Date().toISOString()],
   );
-  return rows[0];
+  return wsRow(rows[0]);
 }
 
 export async function getSetting(key: string): Promise<Record<string, unknown> | null> {

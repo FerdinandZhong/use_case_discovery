@@ -14,6 +14,21 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // generous — this is a pre-session batch pass
 
+// Run fn over items with at most `limit` in flight (order preserved).
+async function mapLimit<T, R>(items: T[], limit: number, fn: (x: T) => Promise<R>): Promise<R[]> {
+  const out: R[] = new Array(items.length);
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        const i = next++;
+        out[i] = await fn(items[i]);
+      }
+    }),
+  );
+  return out;
+}
+
 const NEUTRAL: UseCaseScores = {
   strategicAlignment: 3, frequencyVolume: 3, potentialRoi: 3, userExperience: 3,
   dataAvailability: 3, toleranceForError: 3, complexityOfLogic: 3, integrationEase: 3,
@@ -52,20 +67,25 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
   try {
     // 1) Score all candidates in one call (fatal errors fall back to neutral scores).
     let scored: Awaited<ReturnType<typeof prioritize>> = [];
+    let scoringFallback = false;
     try {
       scored = await prioritize(candidates);
     } catch (e) {
       console.error('prioritize failed, using neutral scores:', e);
+      scoringFallback = true;
     }
     const scoreById = new Map(scored.map((s) => [s.id, s]));
 
     // 2) Draft canvas + kill-idea for each candidate, in parallel, resilient per item.
-    const useCases: WorkshopUseCase[] = await Promise.all(
-      candidates.map(async (c): Promise<WorkshopUseCase> => {
+    const surveyUseCases: WorkshopUseCase[] = await mapLimit(
+      candidates,
+      3,
+      async (c): Promise<WorkshopUseCase> => {
         const scores = scoreById.get(c.id)?.scores ?? NEUTRAL;
+        const aiErrors: ('canvas' | 'kill')[] = [];
         const [canvas, kill] = await Promise.all([
-          draftCanvas(c.name, c.context).catch(() => undefined),
-          killIdea(c.name, c.context).catch(() => undefined),
+          draftCanvas(c.name, c.context).catch(() => (aiErrors.push('canvas'), undefined)),
+          killIdea(c.name, c.context).catch(() => (aiErrors.push('kill'), undefined)),
         ]);
         return {
           id: c.id,
@@ -81,9 +101,13 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
           pattern: c.pattern,
           systems: c.systems,
           hitl: c.hitl,
+          ...(aiErrors.length ? { aiErrors } : {}),
         };
-      }),
+      },
     );
+    // Keep use cases added live in the room (not survey-derived) across regenerate.
+    const oldPack = existing?.data as unknown as WorkshopPack | undefined;
+    const useCases = [...surveyUseCases, ...(oldPack?.useCases ?? []).filter((u) => u.source !== 'survey')];
 
     // 3) Architecture for the top-ranked use case.
     const top = [...useCases].sort(
@@ -108,10 +132,15 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
       strategy: (existing?.data as any)?.strategy, // preserve Phase-01 North Star across regenerate
       signals: (existing?.data as any)?.signals, // preserve facilitator session signals across regenerate
       generatedAt: new Date().toISOString(),
+      ...(scoringFallback ? { scoringFallback: true as const } : {}),
+      // Snapshot of the pack we're replacing, so the facilitator can restore it (no recursion).
+      ...(oldPack?.useCases?.length
+        ? { previous: { ...oldPack, previous: undefined, previousSavedAt: undefined }, previousSavedAt: new Date().toISOString() }
+        : {}),
     };
 
     const row = await saveWorkshop(params.slug, pack, 'generated');
-    return NextResponse.json({ status: row.status, pack: row.data });
+    return NextResponse.json({ status: row.status, pack: row.data, updatedAt: row.updated_at });
   } catch (e: any) {
     console.error('workshop generate failed:', e);
     return NextResponse.json({ error: `Generation failed: ${e.message ?? e}` }, { status: 502 });
